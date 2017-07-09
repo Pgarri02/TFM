@@ -1120,9 +1120,9 @@ img {
 .thumbnail a > img,
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
-
-    width: 500px;
-    height: 300px;
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 .img-rounded {
   border-radius: 6px;
@@ -4635,7 +4635,7 @@ fieldset[disabled] .navbar-default .btn-link:focus {
 }
 .navbar-inverse .navbar-collapse,
 .navbar-inverse .navbar-form {
-  border-color: #FFFFFF;
+  border-color: #101010;
 }
 .navbar-inverse .navbar-nav > .open > a,
 .navbar-inverse .navbar-nav > .open > a:hover,
@@ -6753,41 +6753,5 @@ button.close {
   .hidden-print {
     display: none !important;
   }
-}
-
-#slide {
-  overflow: hidden;
-  margin: auto;
-}
-#slide img {
-  width: 100%;
-  max-height: 350px;
-  object-fit: cover; /* Rellena la foto con el div, respetando ratio y si hace falta recorta la img */
-}
-#slide ul {
-  display: flex; /* Caja flexible, con sus hijos tambien flexibles */
-  padding: 0;
-  width: 400%;
-  animation: cambio 20s infinite alternate; /* La animacion dura 20s, se repite indefinidamente, al llegar a la última empieza desde ésta  */
-}
-#slide li {
-  width: 100%;
-}
-@keyframes cambio {
-  0% {margin-left:0;} /* Primera foto del slide */
-  20% {margin-left:0;} /* 20% de 20s = 4s */
-                        /* 5% de 20s = 1s, transicion a la segunda imagen */
-  25% {margin-left:-100%;}
-  45% {margin-left:-100%;}
-
-  50% {margin-left:-200%;}
-  70% {margin-left:-200%;}
-
-  75% {margin-left:-300%;}
-  100% {margin-left:-300%;}
-}
-
-.carousel-inner > .item > img, .carousel-inner > .item > a > img {
-    width: 100%;
 }
 /*# sourceMappingURL=bootstrap.css.map */

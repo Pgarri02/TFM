@@ -29,95 +29,87 @@
     xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
     xmlDoc2 = parser.parseFromString(nombresxml, "text/xml"); 
 
-        // Obtengo la palabra a buscar
-        var nom = document.getElementById('buscapalabra').value;
-        // Consultas xPath
-        st1 = "//persName[@corresp='#" + nom + "']";
-        st2 = "//person[@id='" + nom + "']//*";
+    // Obtengo la palabra a buscar
+    var nom = document.getElementById('buscapalabra').value;
+    // Consultas xPath
+    st1 = "//persName[@corresp='#" + nom + "']";
+    st2 = "//person[@id='" + nom + "']//*";
+  
 
-        var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
-        var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
+    var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
+    var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
 
-        try {
-           // Se van a iterar los dos nodos
-           var node1 = result1.iterateNext();
-           var node2 =  result2.iterateNext();
-           
-           // En infoNode1 guardo la información que obtenga del textoxml
-           var infoNode1;
-           // En el array datos guardo la información que obtenga del nombresxml
-           var i = 0;
-           var datos = [];
-           while (node1) {
-            infoNode1 = node1.textContent.toString();
-            node1 = result1.iterateNext();
-          }
-          while(node2){
-              // Almaceno en el array datos, los campos necesarios para mostrar la tabla
-              datos[i] = node2.textContent.toString();
-              node2 = result2.iterateNext();
-              i++;
-            }
-
-          
-
-            // Creación de la tabla con la información
-            var loadTable = '<table width="700" border="1"><tr><td colspan="2" rowspan="1">' + "Información de" + ""+ infoNode1 + '</td>';
-            for (var i = 0; i <= datos.length - 1; i++) {
-              loadTable += '</tr><tr><td width="118">' + datos[i] + '</td>';
-            }
-            loadTable += '</tr></table>';
-         
-
-            //Cargo la tabla
-            $('#elementoTabla').append(loadTable.valueOf());
-            document.getElementById('elementoTabla').style.visibility = 'visible';
-
-          }
-          catch (e) {
-           alert('No se encuentra la palabra');
-           dump( 'Error: Document tree modified during iteration ' + e );
-         }
-       }
-
-       function buscaLugares() {
-
-        var textoxml = document.getElementById('textoxml').textContent;
-        parser = new DOMParser();
-        xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
-
-
-        var nom = document.getElementById('buscalugar').value;
-
-        st3 = "//placeName[@corresp='#" + nom + "']//@href";
-        var result3 = xmlDoc1.evaluate(st3, xmlDoc1, null, XPathResult.ITERATOR, null);
-
-
-
-        try {
-
-          var node3 = result3.iterateNext();
-          var infoNode3;
-
-          while (node3) {
-            infoNode3 = node3.textContent.toString();
-            node3 = result3.iterateNext();
-          }
-
-
-          $('#showPlace').prop('src', infoNode3.toString());
-
+    try {
+        // Se van a iterar los dos nodos
+        var node1 = result1.iterateNext();
+        var node2 =  result2.iterateNext();
+        
+        // En infoNode1 guardo la información que obtenga del textoxml
+        var infoNode1;
+        // En el array datos guardo la información que obtenga del nombresxml
+        var i = 0;
+        var datos = [];
+        while (node1) {
+          infoNode1 = node1.textContent.toString();
+          node1 = result1.iterateNext();
         }
+        while(node2){
+          // Almaceno en el array datos, los campos necesarios para mostrar la tabla
+          datos[i] = node2.textContent.toString();
+          node2 = result2.iterateNext();
+          i++;
+        }
+        // Creación de la tabla con la información
+        var loadTable = '<table width="700" border="1"><tr><td colspan="2" rowspan="1">' + "Información de" + ""+ infoNode1 + '</td>';
+        for (var i = 0; i < datos.length - 1; i++) {
+          loadTable += '</tr><tr><td width="118">' + datos[i] + '</td>';
+        }
+        loadTable += '</tr></table>';
+        loadTable += "<a href='" + datos[datos.length - 1] +"'>Descargar tabla</a>";
 
-
-        catch (e) {
-           alert('No se encuentra la palabra');
-           dump( 'Error: Document tree modified during iteration ' + e );
-         }
+        //Cargo la tabla
+        $('#elementoTabla').append(loadTable.valueOf());
+        document.getElementById('elementoTabla').style.visibility = 'visible';
 
       }
+      catch (e) {
+        alert('No se encuentra la palabra');
+        dump( 'Error: Document tree modified during iteration ' + e );
+      }
+    }
 
-      </script>
+    function buscaLugares() {
+
+    var textoxml = document.getElementById('textoxml').textContent;
+    parser = new DOMParser();
+    xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
+
+    var nom = document.getElementById('buscalugar').value;
+
+    st3 = "//placeName[@corresp='#" + nom + "']//@href";
+    var result3 = xmlDoc1.evaluate(st3, xmlDoc1, null, XPathResult.ITERATOR, null);
+    try {
+      var node3 = result3.iterateNext();
+      var infoNode3;
+
+      while (node3) {
+        infoNode3 = node3.textContent.toString();
+        node3 = result3.iterateNext();
+      }
+
+      // Se pone la url en el iframe para que se carge correctamente
+      $('#showPlace').prop('src', infoNode3.toString());
+      document.getElementById("showPlace").style.display = "block";
+
+    }
+    catch (e) {
+        alert('No se encuentra la palabra');
+        dump( 'Error: Document tree modified during iteration ' + e );
+      }
+
+  }
+
+  </script>
 
 
     </head>
@@ -157,7 +149,6 @@
       <option value="Academo">Ἀκάδημος / Academo</option>
       <option value="Alcatoo">Ἀλκάθοος / Alcatoo</option>
       <option value="Apolo">Ἀπόλλων / Apolo</option>
-
       <option value="Arguiris">Aργυρίς / Arguiris</option>
       <option value="Harpias">Ἅρπυιαι / Harpías</option>
       <option value="Artemis">Ἄρτεμις / Ártemis</option>
@@ -178,31 +169,22 @@
       <option value="Leto">Λητώ /  Leto</option>
       <option value="Ceres">Κήρ / Ceres</option>
       <option value="Medos">Μῆδος / Medos</option>
-
-
       <option value="Musas">Μοῦσαι /  Musas</option>
       <option value="Odiseo">Ὀδυσσεύς / Odiseo</option>
       <option value="Onomacrito">Ὀνομάκριτοι / Onomácrito</option>
       <option value="Pelope">Πέλοψ / Pélope</option>
       <option value="Pobreza">Πενία / Pobreza</option>
       <option value="Persefone">Περσεφόνη / Perséfone</option>
-
-
-
       <option value="Confianza">Πίστις / Confianza</option>
       <option value="Pluto">Πλοῦτος / Pluto</option>
       <option value="Polipaides">Πολυπαΐδης / Polipaides</option>
       <option value="Poseidon">Ποσειδῶν / Poseidón</option>
       <option value="Radamantis">Ῥαδάμανθυς / Radamantis</option>
       <option value="Simonides">Σιμωνίδης / Simónides</option>
-
       <option value="Sisifo">Σίσυφος / Sísifo</option>
       <option value="Sofrosine">Σωφρόσυνος / Sofrosines</option>
       <option value="Timagora">Τιμαγόρα / Timágora</option>
-      
       <option value="Gracia">Χάρις / Gracia</option>
-      
-
     </select>
     <span class="input-group-btn">
       <button class="btn btn-info btn-lg" onclick="buscador()">
@@ -224,7 +206,7 @@
 <div id="custom-search-input">
   <div class="input-group col-md-3">
 
-    <select id="buscapalabra" placeholder="buscar2">
+    <select id="buscalugar" placeholder="Buscar lugares">
       <option value="Delos">Delos / Δήλος</option>
       <option value="Troya"> Troya / Τροία</option>
       <option value="Tebas"> Tebas / Θήβη</option>
@@ -243,7 +225,6 @@
       <option value="Sicilia"> Sicilia / Σικελός</option>
       <option value="Melio"> Melio / Μήλιος </option>
     </select>
-
     <span class="input-group-btn">
       <button class="btn btn-info btn-lg" onclick="buscaLugares()">
         <i class="glyphicon glyphicon-search"></i>
@@ -251,26 +232,12 @@
     </span>
   </div>
 </div>
-
-
-<p> Buscador de nombres antiguos de lugares en la obra </p> 
-<div id="custom-search-input">
-  <div class="input-group col-md-3">
-    <input id="buscalugar" type="text" class="form-control input-lg" placeholder="Buscar" />
-    <span class="input-group-btn">
-      <button class="btn btn-info btn-lg" onclick="buscaLugares()">
-        <i class="glyphicon glyphicon-search"></i>
-      </button>
-    </span>
-  </div>
-</div>
-
 
 
 <br>
 
 
-<iframe id="showPlace" src="https://www.google.com/maps/d/edit?mid=1RGVkcjs8McbToptYUqY_cY-VE48&ll=37.39847598254924%2C25.268917999999985&z=18" width="700" height="500"></iframe>
+<iframe style="display: none;" id="showPlace" src="https://www.google.com/maps/d/edit?mid=1RGVkcjs8McbToptYUqY_cY-VE48&ll=37.39847598254924%2C25.268917999999985&z=18" width="700" height="500"></iframe>
 
 
 <h3>Libro 1</h3>
@@ -721,13 +688,10 @@
 
       <p>lugar al hombre con el que no va a tener ninguna consideración.</p>
       <br>
-
-
       <p>La hartura engendra el desenfreno, cuando la felicidad acompaña</p>
 
       <p>a un malvado o aun hombre que no tenga una mente equilibrada.</p>
       <br>
-
 
       <p>Cuando hayas estado irritado con un hombre, nunca me eches</p>
 
@@ -6255,7 +6219,8 @@
                    <person id="Eeton">
                     <persName type="gr">Αἴθων </persName>
                     <persName type="es">Eetón</persName>
-                    <description>Generalmente se interpreta como nombre de un pueblo histórico o mitológico; también es el nombre que Odiseo se da a sí mismo en su conversación con Penélope (<i>Odiseo</i> XIX 183 ss).</description>
+                    <description>Generalmente se interpreta como nombre de un pueblo histórico o mitológico; también es el nombre que Odiseo se da a sí mismo en su conversación con Penélope.</description>
+                    <url>https://www.linkedin.com/</url>
                   </person>
 
                   <person id="Academo">
