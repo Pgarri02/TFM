@@ -10,11 +10,11 @@
   <script type="text/javascript" src="test.json"></script>
   <script src="../js/bootstrap.min.js"></script>
   <script>
-  $(document).ready(function () { 
+  $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
   });
 
-  $(document).ready(function () { 
+  $(document).ready(function () {
     $('[data-toggle="popover"]').popover();
   });
 
@@ -27,14 +27,14 @@
     var nombresxml = document.getElementById('nombresxml').textContent;
     parser = new DOMParser();
     xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
-    xmlDoc2 = parser.parseFromString(nombresxml, "text/xml"); 
+    xmlDoc2 = parser.parseFromString(nombresxml, "text/xml");
 
     // Obtengo la palabra a buscar
     var nom = document.getElementById('buscapalabra').value;
     // Consultas xPath
     st1 = "//persName[@corresp='#" + nom + "']";
     st2 = "//person[@id='" + nom + "']//*";
-  
+
 
     var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
     var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
@@ -43,7 +43,7 @@
         // Se van a iterar los dos nodos
         var node1 = result1.iterateNext();
         var node2 =  result2.iterateNext();
-        
+
         // En infoNode1 guardo la información que obtenga del textoxml
         var infoNode1;
         // En el array datos guardo la información que obtenga del nombresxml
@@ -68,6 +68,7 @@
         loadTable += "<a href='" + datos[datos.length - 1] +"'>Documento con la información</a>";
 
         //Cargo la tabla
+        document.getElementById('elementoTabla').innerHTML = "";
         $('#elementoTabla').append(loadTable.valueOf());
         document.getElementById('elementoTabla').style.visibility = 'visible';
 
@@ -133,7 +134,7 @@
  <div class="col-md-12 col-xs-12 col-sm-12">
    <h1></h1>
 
- </h1>.</h1>     
+ </h1>.</h1>
 
  <h2>Eλεγείων</h2>
 
@@ -199,12 +200,12 @@
 <br>
 
 <!--Elemento vacío para insertar la tabla-->
-<div id="elementoTabla" style="visibility: hidden;">        
-</div> 
+<div id="elementoTabla" style="visibility: hidden;">
+</div>
 
 
 <br>
-<p> Buscador de nombres antiguos de lugares en la obra </p> 
+<p> Buscador de nombres antiguos de lugares en la obra </p>
 <div id="custom-search-input">
   <div class="input-group col-md-3">
 
@@ -247,7 +248,7 @@
  <div class="panel panel-default">
   <div class="panel-heading" role="tab" id="headingOne">
    <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-    Versos del 1 al 
+    Versos del 1 al
 
    47</a></h4>
   </div>
@@ -1942,7 +1943,7 @@
 
 
      <p>Haciendo el bien, el bien recibe: ¿por qué vas a enviar otro
-       mensajero? 
+       mensajero?
      </p>
 
      <p>El mensaje de la acción es recta fácil.</p>
@@ -4115,7 +4116,7 @@
 </teiHeader>
 <text>
   <body>
-   <div type="elegías"> 
+   <div type="elegías">
 
 
     <head>Libro 1</head>
@@ -5603,7 +5604,7 @@
                      <l>fortuna a quien uno quiera. Y he visto a otro que, por dar gusto</l>
                      <l>a su estómago, dilapidó sus riquezas y dijo: "Me marcho</l>
                      <l>después de satisfacer mi apetito"; y ahora pide limosna a todos</l>
-                     <l>sus amigos, allí donde ve a alguno. Por tanto, 
+                     <l>sus amigos, allí donde ve a alguno. Por tanto,
                       <persName corresp="#Democles">Democles</persName>, lo
                       mejor</l>
                       <l>de todo es gastar según tus riquezas y tener cuidado; pues</l>
@@ -5975,7 +5976,7 @@
                            <l>incluso el que es malvado se vuelve noble.</l>
                          </lg>
                          <lg n="275">
-                           <l>Ojalá tuviera yo la plenitud de la juventud y me amaran <persName corresp="#Apolo">Febo 
+                           <l>Ojalá tuviera yo la plenitud de la juventud y me amaran <persName corresp="#Apolo">Febo
                              Apolo</persName></l>,<l> hijo de <persName corresp="#Leto">Leto</persName>, y <persName corresp="#Zeus">Zeus</persName>, el rey de los inmortales, para</l>
                              <l>que con la justicia pueda vivir al abrigo de todas las desgracias,
                               alegrando</l>
@@ -6208,7 +6209,7 @@
 
                               </div>
                             </div>
-              
+
                       </body>
                     </text>
                   </TEI>
@@ -6275,7 +6276,7 @@
 
                        En época helenística posterior, asumió incluso el papel de Ilitía como ayudante de los partos y acabó siendo identificada con Selene, una titánide que era la diosa griega de la Luna (razón por la cual en ocasiones aparece representada con una luna creciente sobre la cabeza). También fue identificada con la diosa romana Diana, con la etrusca Artume y con la griega o caria Hécate.</description>
                      <url>https://docs.google.com/document/d/1MGQKMAM3hl2a0jjNjQU25zPAFAXCZBp77eD9BfDTl_c/pub</url>
-        
+
                      </person>
 
                      <person id="Asclepiadas">
@@ -6287,8 +6288,8 @@
 
                         El dios griego de la medicina era Asclepíades. Según la leyenda, Asclepíades fue hijo de Apolo, quien originalmente era el dios de la medicina, y de Coronis, una virgen bella pero mortal</description>
                       <url>https://docs.google.com/document/d/1qfG5zVNtvFqGSpkkdSzPvVc4KHOfnEOAUhL1f4_pYy0/pub</url>
-                      
-                      
+
+
                       </person>
 
                       <person id="Boreas">
@@ -6298,7 +6299,7 @@
 
                          Pausanias escribió que Bóreas tenía serpientes en lugar de pies, aunque en el arte se le solía representar con pies humanos calzados con coturnos. Como los otros tres dioses-viento (Céfiro, Euro y Noto), era hijo de Astreo y de Eos.</description>
                        <url>https://docs.google.com/document/d/15EkYG6K8MRNWrAkVQ2xTosjAdeNBMK_kbieARNrB2-c/pub</url>
-                       
+
                        </person>
 
                        <person id="Democles">
@@ -6306,7 +6307,7 @@
                          <persName type="es">Democles</persName>
                          <description>Desconocido, este nombre es bastante común en Atenas.</description>
                         <url>https://docs.google.com/document/d/11-KM1Br8qsvL4r0wP0mL9LadsvD1vSgiuZX6XSsPcOE/pub</url>
-                      
+
                        </person>
 
                        <person id="Demonacte">
@@ -6342,7 +6343,7 @@
 
                             Teognis de Megara era un noble de estirpe dórica, que vivió en la época en que se afirmaba la democracia: "Los que antes eran viles, ahora son los señores, y los nobles se han convertido en viles. ¿Quién es capaz de aguantar estas cosas?", (V. 53-58). Privado de sus privilegios, desterrado de su Megara (783-788), conoció la pobreza (173-178; 833-836) y la opresión (419-420), y su alma orgullosa se colmó de rencor. Pregunta a Zeus por qué mantiene en un mismo honor a los justos y a los malvados (373-380; 743-753), e implora de él con intensa pasión la satisfacción de la venganza (341-350).</description>
                           <url>https://docs.google.com/document/d/1xmJop_KCL-2zRW01H_Oy-1lklmEkey_bQeTD1ZkVlSs/pub</url>
-                          
+
                           </person>
 
                           <person id="Esperanza">
@@ -6352,7 +6353,7 @@
 
                              Su equivalente romano es la diosa Spes.Tradicionalmente se la ha definido como la última diosa (en latín: Spes Ultima Dea que significa "la esperanza es lo último que muere"), en cuanto la esperanza es el último recurso disponible para el hombre. Muchos consideran que esta definición surge del mito de Pandora por ser la última en hallarse dentro del mítico recipiente. </description>
                            <url>https://docs.google.com/document/d/1zL7uxlewpK-D5WQHh09mohnsYicewS5O78UrnOulHV4/pub</url>
-                           
+
                            </person>
 
                            <person id="Zeus">
@@ -6367,15 +6368,15 @@
 
                                Su equivalente en la mitología romana era Júpiter, en la etrusca, Tinia y en la egipcia, Amón.</description>
                              <url>https://docs.google.com/document/d/1xAoxifjF5miW2FZDM2Kf71_M1t2eIv3RUdVOn_3nWfs/pub</url>
-                             
+
                              </person>
 
                              <person id="Cadmo">
                               <persName type="gr">Κάδμος</persName>
                               <persName type="es">Cadmo</persName>
-                              
+
                             <description>En la mitología griega, Cadmo (en griego antiguo, Κάδμος) era hijo de Telefasa y de Agénor, hermano por lo tanto de Fénix, de Cílix y de Europa. Habitó en Fenicia hasta que Zeus, transformado en toro, raptó a su hermana. Después de una infructuosa búsqueda, Cadmo arribó a Beocia donde fundó una fortaleza; Cadmea, la cual posteriormente llegaría a ser la ciudad de Tebas. También se atribuye a Cadmo la introducción del alfabeto en Grecia, al igual que la del arado, la fundición de metales y la agricultura; aunque algunas fuentes atribuyen a Dánao la introducción del alfabeto.</description>
-                          
+
                           <url>https://docs.google.com/document/d/12dJLOS9yUWQSy9eaAtOL_LSUUxyzO52VfGDFVmBhCLE/pub</url>
                           </person>
 
@@ -6586,7 +6587,7 @@
                                        Las Cárites solían ser consideradas hijas de Zeus y Eurínome, aunque también se decía que eran hijas de Hera, de Dioniso, o de Helios y la náyade Egle. Homero escribió que formaban parte del séquito de Afrodita. Las Cárites estaban asociadas asimismo con el inframundo y los misterios eleusinos.
 
                                        El río Cefiso cerca de Delfos estaba consagrado a ellas, y tenían sus propias festividades, las Caritesias o Carisias, que son las fiestas de "Acción de Gracias", en las que se practicaba el banquete "Charistía", en el que se comía torta de miel llamada piramús en honor de las Cárites.</description>
-                                     
+
                                      <url>https://docs.google.com/document/d/13Vdk5bylMArcBvk359gPypYMKMjVWHYiHgysYCzDhnE/pub</url>
                                      </person>
 
