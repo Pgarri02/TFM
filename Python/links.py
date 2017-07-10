@@ -2,32 +2,46 @@
 """
 Created on Mon Jun 19 11:19:39 2017
 
-@author: adrian
 """
 
-def guardar(texto):
-    f = open('mi_fichero.txt', 'w')
-    f.write(texto)
+def generar_links_plano():
+    f = open('texto.txt', 'r')
+    f2 = open('texto_links.txt', 'w')
+    ls = f.readlines()
+    texto = ""
+    for linea in ls:
+        palabras = linea.split()
+        for pal in palabras:
+            if pal[-1] == ",":
+                pal = pal[:-1]
+                texto = texto + "<a ref=\"http://logeion.uchicago.edu/index.html#" + pal + "\">" +  pal + "</a>" + ", "
+            else:
+                texto = texto + "<a ref=\"http://logeion.uchicago.edu/index.html#" + pal + "\">" +  pal + "</a>" + " "
+        texto = texto + "\n"
+    f2.write(texto)
     f.close()
+    f2.close()
+                
 
-def leer():
-    f = open('teognis.xml', 'r')
-    f2 = open('teognis_links.xml', 'w')
+def generar_links_xml():
+    f = open('texto.txt', 'r')
+    f2 = open('texto_links.txt', 'w')
     ls = f.readlines()
     for linea in ls:
         mi_pal = ""
-        link = False
+        link = True
         for letra in linea:
             if letra == "<":
                 link = False
                 if mi_pal != "":
-                    mi_pal = "<a ref=\"www.perseus.tufts.edu/hopper/morph?l=" + mi_pal + "\">" +  mi_pal + "</a>"
+                    
+                    mi_pal = "<a ref=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
                     f2.write(mi_pal)
                 mi_pal = ""
                 f2.write(letra)
             elif letra == " " or letra == "," or letra == "\n":
                 if mi_pal != "":
-                    mi_pal = "<a ref=\"www.perseus.tufts.edu/hopper/morph?l=" + mi_pal + "\">" +  mi_pal + "</a>"
+                    mi_pal = "<a ref=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
                     f2.write(mi_pal)
                 mi_pal = ""
                 f2.write(letra)
