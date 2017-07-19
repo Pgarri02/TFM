@@ -14,17 +14,17 @@ def generar_links_plano():
         for pal in palabras:
             if pal[-1] == ",":
                 pal = pal[:-1]
-                texto = texto + "<a ref=\"http://logeion.uchicago.edu/index.html#" + pal + "\">" +  pal + "</a>" + ", "
+                texto = texto + "<a href=\"http://logeion.uchicago.edu/index.html#" + pal + "\">" +  pal + "</a>" + ", "
             else:
-                texto = texto + "<a ref=\"http://logeion.uchicago.edu/index.html#" + pal + "\">" +  pal + "</a>" + " "
+                texto = texto + "<a href=\"http://logeion.uchicago.edu/index.html#" + pal + "\">" +  pal + "</a>" + " "
         texto = texto + "\n"
     f2.write(texto)
     f.close()
     f2.close()
 
 def generar_links_htmlv2():
-    f = open('teognisgriego.html', 'r')
-    f2 = open('teognisgriego_links.html', 'w')   
+    f = open('teognisgriego.html', 'r', encoding='utf-8')
+    f2 = open('teognisgriego_links.html', 'w', encoding='utf-8')   
     ls = f.readlines()
     for linea in ls:
         if linea.find("<p>") != -1:
@@ -35,13 +35,13 @@ def generar_links_htmlv2():
                     link = False
                     if mi_pal != "":
                         
-                        mi_pal = "<a ref=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
+                        mi_pal = "<a href=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
                         f2.write(mi_pal)
                     mi_pal = ""
                     f2.write(letra)
                 elif letra == " " or letra == "," or letra == "." or letra == "\n":
                     if mi_pal != "":
-                        mi_pal = "<a ref=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
+                        mi_pal = "<a href=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
                         f2.write(mi_pal)
                     mi_pal = ""
                     f2.write(letra)
@@ -69,13 +69,13 @@ def generar_links_html():
                 link = False
                 if mi_pal != "":
                     
-                    mi_pal = "<a ref=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
+                    mi_pal = "<a href=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
                     f2.write(mi_pal)
                 mi_pal = ""
                 f2.write(letra)
             elif letra == " " or letra == "," or letra == "." or letra == "\n":
                 if mi_pal != "":
-                    mi_pal = "<a ref=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
+                    mi_pal = "<a href=\"http://logeion.uchicago.edu/index.html#" + mi_pal + "\">" +  mi_pal + "</a>"
                     f2.write(mi_pal)
                 mi_pal = ""
                 f2.write(letra)
