@@ -4,8 +4,111 @@
 <head>
 	<meta charset="utf-8" lang="es">
 	<link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="css.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $(document).ready(function () {
+      $('[data-toggle="popover"]').popover();
+    });
+  </script>
+  <script type="text/javascript">
+    function buscador() {
+
+      var textoxml = document.getElementById('textoxml').textContent;
+      var nombresxml = document.getElementById('nombresxml').textContent;
+      parser = new DOMParser();
+      xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
+      xmlDoc2 = parser.parseFromString(nombresxml, "text/xml");
+
+      // Obtengo la palabra a buscar
+      var nom = document.getElementById('buscapalabra').value;
+      // Consultas xPath
+      st1 = "//persName[@corresp='#" + nom + "']";
+      st2 = "//person[@id='" + nom + "']//*";
+
+
+      var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
+      var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
+
+      try {
+        // Se van a iterar los dos nodos
+        var node1 = result1.iterateNext();
+        var node2 = result2.iterateNext();
+
+        // En infoNode1 guardo la información que obtenga del textoxml
+        var infoNode1;
+        // En el array datos guardo la información que obtenga del nombresxml
+        var i = 0;
+        var datos = [];
+        while (node1) {
+          infoNode1 = node1.textContent.toString();
+          node1 = result1.iterateNext();
+        }
+        while (node2) {
+          // Almaceno en el array datos, los campos necesarios para mostrar la tabla
+          datos[i] = node2.textContent.toString();
+          node2 = result2.iterateNext();
+          i++;
+        }
+        // Creación de la tabla con la información
+        var loadTable = '<table width="1000" border="2" margin="100"><tr><td colspan="2" rowspan="1">' + "Información de" + " " + infoNode1 + '</td>';
+        for (var i = 0; i < datos.length - 1; i++) {
+          loadTable += '</tr><tr><td width="118">' + datos[i] + '</td>';
+        }
+        loadTable += '</tr></table>';
+        loadTable += "<a href='" + datos[datos.length - 1] + "'>Documento con la información</a>";
+
+        //Cargo la tabla
+        document.getElementById('elementoTabla').innerHTML = "";
+        $('#elementoTabla').append(loadTable.valueOf());
+        document.getElementById('elementoTabla').style.visibility = 'visible';
+
+      }
+      catch (e) {
+        alert('No se encuentra la palabra');
+        dump('Error: Document tree modified during iteration ' + e);
+      }
+    }
+
+    function buscaLugares() {
+
+      var textoxml = document.getElementById('textoxml').textContent;
+      parser = new DOMParser();
+      xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
+
+      var nom = document.getElementById('buscalugar').value;
+
+      st3 = "//placeName[@corresp='#" + nom + "']//@href";
+      var result3 = xmlDoc1.evaluate(st3, xmlDoc1, null, XPathResult.ITERATOR, null);
+      try {
+        var node3 = result3.iterateNext();
+        var infoNode3;
+
+        while (node3) {
+          infoNode3 = node3.textContent.toString();
+          node3 = result3.iterateNext();
+        }
+
+        // Se pone la url en el iframe para que se carge correctamente
+        $('#showPlace').prop('src', infoNode3.toString());
+        document.getElementById("showPlace").style.display = "block";
+
+      }
+      catch (e) {
+        alert('No se encuentra la palabra');
+        dump('Error: Document tree modified during iteration ' + e);
+      }
+
+    }
+  </script>
+
 </head>
-<body>
+<body class="css">
 
 	<div class="container">
          <div class="col-md-8 col-sm-12 col-xs-12" style="padding-top: 10px;">
@@ -17,7 +120,7 @@
                         <li><a href="como.html">¿Cómo funciona?</a></li>
                         <li><a href="teognisgriego_links.html">ἐλεγείων</a></li>
                         <li><a href="teognisespanol1.html">Elegías</a></li>
-                        <li><a href="lugares.html">Lugares de la obra</a></li>
+                        <li class="active"><a href="lugares.html">Lugares de la obra</a></li>
                         
                      </ul>
                   </div>
@@ -26,6 +129,41 @@
             <br>
             <br>
             <br>
+
+
+            <p> Buscador de nombres antiguos de lugares en la obra </p>
+      <div id="custom-search-input">
+        <div class="input-group col-md-3">
+
+          <select style="width:220px;border:1px solid #04467E;background-color:#0000; color:#2D4167;font-size:14px" id="buscalugar"
+            placeholder="Buscar lugares">
+      <option value="Delos">Delos / Δήλος</option>
+      <option value="Troya"> Troya / Τροία</option>
+      <option value="Tebas"> Tebas / Θήβη</option>
+      <option value="Esmirna">Esmirna / Σμύρνα</option>
+      <option value="Colofon"> Colofón / Κολοφών</option>
+      <option value="Eurotas"> Eurotas / Εὐρώτας</option>
+      <option value="Lacedemonia"> Lacedemonia / Λακεδαίμων</option>
+      <option value="Tmolo"> Molos / Mῶλος </option>
+      <option value="Lelanto"> Lelanto / Ληλάντος</option>
+      <option value="Cerinto"> Cerinto / Κήρινθος</option>
+      <option value="Platanistunte"> Platanistunte / Πλατανιστοῦς</option>
+      <option value="Taigeto"> Taigeto / Τηϋγέτος</option>
+      <option value="Esparta"> Esparta / Σπάρτη</option>
+      <option value="Eubea"> Eubea / Εὔβοια </option>
+      <option value="Grecia"> Grecia / Ἕλλην </option>
+      <option value="Sicilia"> Sicilia / Σικελός</option>
+      <option value="Melio"> Melio / Μήλιος </option>
+    </select>
+          <span class="input-group-btn">
+      <button class="btn btn-info btn-xs" onclick="buscaLugares()">
+        <i class="glyphicon glyphicon-search"></i>
+      </button>
+    </span>
+        </div>
+      </div>
+
+      <br>
         
 
 <iframe src="https://www.google.com/maps/d/embed?mid=1e8u5-T7g0mVWNlZ31xWXzPL-LPU" width="1040" height="720"></iframe>
