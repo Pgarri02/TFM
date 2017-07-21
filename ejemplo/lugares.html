@@ -1,11 +1,11 @@
-		
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8" lang="es">
-	<link rel="stylesheet" href="../css/bootstrap.css">
-    <link rel="stylesheet" href="css.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <meta charset="utf-8" lang="es">
+  <link rel="stylesheet" href="../css/bootstrap.css">
+  <link rel="stylesheet" href="css.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="../js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
@@ -108,10 +108,41 @@
   </script>
 
 </head>
+
 <body class="css">
 
-	<div class="container">
-         <div class="col-md-8 col-sm-12 col-xs-12" style="padding-top: 10px;">
+  <div class="container">
+    <div class="col-md-8 col-sm-12 col-xs-12" style="padding-top: 10px;">
+
+      <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+        <div class="container topnav">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+              aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="indexprincipal.html">Inicio</a></li>
+              <li><a href="como.html">¿Cómo funciona?</a></li>
+              <li><a href="teognisgriego_links.html">ἐλεγείων</a></li>
+              <li><a href="teognisespanol1.html">Elegías</a></li>
+              <li class="active"><a href="lugares.html">Lugares de la obra</a></li>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+
+      <!-- 
             <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
                <div class="container topnav">
                   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -125,54 +156,55 @@
                      </ul>
                   </div>
                </div>
-            </nav>
-            <br>
-            <br>
-            <br>
+            </nav> -->
+      <br>
+      <br>
+      <br>
 
 
-            <p> Buscador de nombres antiguos de lugares en la obra </p>
+      <p> Buscador de nombres antiguos de lugares en la obra </p>
       <div id="custom-search-input">
         <div class="input-group col-md-3">
 
-          <select style="width:220px;border:1px solid #04467E;background-color:#0000; color:#2D4167;font-size:14px" id="buscalugar"
+          <select  style="width:220px;border:1px solid #04467E;background-color:#0000; color:#2D4167;font-size:14px" id="buscalugar"
             placeholder="Buscar lugares">
-      <option value="Delos">Delos / Δήλος</option>
-      <option value="Troya"> Troya / Τροία</option>
-      <option value="Tebas"> Tebas / Θήβη</option>
-      <option value="Esmirna">Esmirna / Σμύρνα</option>
-      <option value="Colofon"> Colofón / Κολοφών</option>
-      <option value="Eurotas"> Eurotas / Εὐρώτας</option>
-      <option value="Lacedemonia"> Lacedemonia / Λακεδαίμων</option>
-      <option value="Tmolo"> Molos / Mῶλος </option>
-      <option value="Lelanto"> Lelanto / Ληλάντος</option>
-      <option value="Cerinto"> Cerinto / Κήρινθος</option>
-      <option value="Platanistunte"> Platanistunte / Πλατανιστοῦς</option>
-      <option value="Taigeto"> Taigeto / Τηϋγέτος</option>
-      <option value="Esparta"> Esparta / Σπάρτη</option>
-      <option value="Eubea"> Eubea / Εὔβοια </option>
-      <option value="Grecia"> Grecia / Ἕλλην </option>
-      <option value="Sicilia"> Sicilia / Σικελός</option>
-      <option value="Melio"> Melio / Μήλιος </option>
-    </select>
+            <option value="Delos">Delos / Δήλος</option>
+            <option value="Troya"> Troya / Τροία</option>
+            <option value="Tebas"> Tebas / Θήβη</option>
+            <option value="Esmirna">Esmirna / Σμύρνα</option>
+            <option value="Colofon"> Colofón / Κολοφών</option>
+            <option value="Eurotas"> Eurotas / Εὐρώτας</option>
+            <option value="Lacedemonia"> Lacedemonia / Λακεδαίμων</option>
+            <option value="Tmolo"> Molos / Mῶλος </option>
+            <option value="Lelanto"> Lelanto / Ληλάντος</option>
+            <option value="Cerinto"> Cerinto / Κήρινθος</option>
+            <option value="Platanistunte"> Platanistunte / Πλατανιστοῦς</option>
+            <option value="Taigeto"> Taigeto / Τηϋγέτος</option>
+            <option value="Esparta"> Esparta / Σπάρτη</option>
+            <option value="Eubea"> Eubea / Εὔβοια </option>
+            <option value="Grecia"> Grecia / Ἕλλην </option>
+            <option value="Sicilia"> Sicilia / Σικελός</option>
+            <option value="Melio"> Melio / Μήλιος </option>
+          </select>
           <span class="input-group-btn">
-      <button class="btn btn-info btn-xs" onclick="buscaLugares()">
-        <i class="glyphicon glyphicon-search"></i>
-      </button>
-    </span>
+            <button class="btn btn-info btn-xs" onclick="buscaLugares()">
+              <i class="glyphicon glyphicon-search"></i>
+            </button>
+          </span>
         </div>
       </div>
 
       <br>
-         
-    <div class="iframe-rwd">
-      <iframe id="showPlace" src="https://www.google.com/maps/d/embed?mid=1e8u5-T7g0mVWNlZ31xWXzPL-LPU" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"  width="700" height="500"></iframe>
-      
+
+      <div class="iframe-rwd">
+        <iframe id="showPlace" src="https://www.google.com/maps/d/embed?mid=1e8u5-T7g0mVWNlZ31xWXzPL-LPU" frameborder="0" scrolling="no"
+          marginheight="0" marginwidth="0" width="700" height="500"></iframe>
+
+      </div>
+
+
     </div>
-
-
-</div>
-</div>
+  </div>
 
 
   <iframe id="textoxml" style="display: none;">
@@ -204,7 +236,7 @@
           <div type="elegías">
 
 
-           
+
 
 
             <div n="1">
@@ -1730,7 +1762,8 @@
               <lg n="203">
                 <l>Que caiga sobre mí desde lo alto el enorme gran cielo de</l>
                 <l>bronce - temor de los hombres nacidos tiempo ha-, si yo no ayudo a ellos que me quieren y no he de ser un
-                  tormento</l>
+                  tormento
+                </l>
                 <l>y un gran azote para mis enemigos.</l>
               </lg>
               <lg n="204">
@@ -2551,7 +2584,8 @@
           tomarla. Esto las llevó a pelear contra los Argonautas. En tradiciones posteriores fueron transformadas en genios
           maléficos con cuerpo de ave de rapiña, horrendo rostro de mujer, orejas de oso y afiladas garras, que llevaban
           consigo tempestades, pestes e infortunio. Esta es la forma que acabó por imponerse y que ha pervivido hasta la
-          actualidad.</description>
+          actualidad.
+        </description>
         <url>https://docs.google.com/document/d/1cbzmHf9yvujYZoqSF0JdlUDKNq_6pWiF3HWN-ZbasxU/pub</url>
       </person>
 
@@ -2741,7 +2775,8 @@
           tradición espartana el hombre mayor lo hace con su amante más joven y lo conduce por el camino de la virtud tradicional
           (vv.27-38). No sabemos nada de este personaje ni el poeta hace mención de ningún acontecimiento de su vida privada.
           Lo único que se puede deducir es que se trata de un joven noble a quien Teognis tiene interés en dedicarle varias
-          elegías</description>
+          elegías
+        </description>
         <url>https://docs.google.com/document/d/1SAF3-75rYMR0sM_nqxNiMngNlCfVuPhleDFhxdEwkIU/pub</url>
       </person>
 
@@ -3185,4 +3220,5 @@
 
   </iframe>
 </body>
+
 </html>
