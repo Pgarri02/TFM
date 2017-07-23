@@ -14,35 +14,28 @@
     $(document).ready(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
-
     $(document).ready(function () {
       $('[data-toggle="popover"]').popover();
     });
   </script>
   <script type="text/javascript">
     function buscador() {
-
       var textoxml = document.getElementById('textoxml').textContent;
       var nombresxml = document.getElementById('nombresxml').textContent;
       parser = new DOMParser();
       xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
       xmlDoc2 = parser.parseFromString(nombresxml, "text/xml");
-
       // Obtengo la palabra a buscar
       var nom = document.getElementById('buscapalabra').value;
       // Consultas xPath
       st1 = "//persName[@corresp='#" + nom + "']";
       st2 = "//person[@id='" + nom + "']//*";
-
-
       var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
       var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
-
       try {
         // Se van a iterar los dos nodos
         var node1 = result1.iterateNext();
         var node2 = result2.iterateNext();
-
         // En infoNode1 guardo la información que obtenga del textoxml
         var infoNode1;
         // En el array datos guardo la información que obtenga del nombresxml
@@ -65,48 +58,38 @@
         }
         loadTable += '</tr></table>';
         loadTable += "<a href='" + datos[datos.length - 1] + "'>Documento con la información</a>";
-
         //Cargo la tabla
         document.getElementById('elementoTabla').innerHTML = "";
         $('#elementoTabla').append(loadTable.valueOf());
         document.getElementById('elementoTabla').style.visibility = 'visible';
-
       }
       catch (e) {
         alert('No se encuentra la palabra');
         dump('Error: Document tree modified during iteration ' + e);
       }
     }
-
     function buscaLugares() {
-
       var textoxml = document.getElementById('textoxml').textContent;
       parser = new DOMParser();
       xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
-
       var nom = document.getElementById('buscalugar').value;
-
       st3 = "//placeName[@corresp='#" + nom + "']//@href";
       var result3 = xmlDoc1.evaluate(st3, xmlDoc1, null, XPathResult.ITERATOR, null);
       try {
         var node3 = result3.iterateNext();
         var infoNode3;
-
         while (node3) {
           infoNode3 = node3.textContent.toString();
           node3 = result3.iterateNext();
         }
-
         // Se pone la url en el iframe para que se carge correctamente
         $('#showPlace').prop('src', infoNode3.toString());
         document.getElementById("showPlace").style.display = "block";
-
       }
       catch (e) {
         alert('No se encuentra la palabra');
         dump('Error: Document tree modified during iteration ' + e);
       }
-
     }
   </script>
 
