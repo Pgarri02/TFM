@@ -2671,8 +2671,7 @@
       <person id="Confianza">
         <persName type="gr">Πίστις</persName>
         <persName type="es">Confianza</persName>
-        <description>En la mitología griega, Pistis (Πίστις) era la personificación de la buena fe, la confianza y fiabilidad. Es mencionada
-          junto con muchas otras personificaciones como Elpis (Esperanza), Sophrosyne (Prudencia), y las Cárites, quienes
+        <description>En la mitología griega, Pistis (Πίστις) era la personificación de la buena fe, la confianza y fiabilidad. Es mencionada junto con muchas otras personificaciones como Elpis (Esperanza), Sophrosyne (Prudencia), y las Cárites, quienes
           estaban todas asociadas con la honestidad y armonía entre la gente. Su equivalente romano era Fides.</description>
         <url>https://docs.google.com/document/d/1GwDM6HvQFsBCYfG4sOt9qUB_zNRtJEYm39-kw46ON-M/pub</url>
       </person>
@@ -2806,6 +2805,12 @@
           en el que se comía torta de miel llamada piramús en honor de las Cárites.</description>
 
         <url>https://docs.google.com/document/d/13Vdk5bylMArcBvk359gPypYMKMjVWHYiHgysYCzDhnE/pub</url>
+      </person>
+
+      <person id="Agamenon">
+        <persName type="gr">Ἀγαμέμνων</persName>
+        <persName type="es">Agamenón</persName>
+        <description>Agamenón es uno de los más distinguidos héroes de la mitología griega cuyas aventuras se narran en la Ilíada de Homero. Hijo del rey Atreo de Micenas y de la reina Aérope, y hermano de Menelao, debido a la antigüedad de las fuentes no está claro si es un personaje histórico o puramente mítico.</description>
       </person>
 
     </listPerson>
