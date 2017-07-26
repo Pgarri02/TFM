@@ -6,16 +6,24 @@ body {
 }
 
 
-h1,h2,h3 {
-    font-family: "herculanum";
+h1,h2,h3,h4 {
+    font-family: "Chalkboard";
 
     
 
 }
 
 
+h3, h4, h5 {
+    color: #B22222;
+}
+
+.navbar-default .navbar-nav > li > a {
+
+    color: white;
+}
 .navbar {
-    background-color:#e1bee7;  
+    background-color:#8B0000;  
     font-family: arial;
     color: white;
 }
@@ -23,19 +31,12 @@ h1,h2,h3 {
 a:link {
     color:black;
 }
+
 a:hover {
 
-    color:#ab47bc;
+    color:#8B0000;
 }
 
-a:active {
-
-    color: #ab47bc; 
-}
-
-a:focus {
-    color: #ab47bc;
-}
 
 
 .iframe-rwd  {

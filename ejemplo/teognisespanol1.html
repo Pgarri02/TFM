@@ -19,7 +19,27 @@
     });
   </script>
   <script type="text/javascript">
+
+  function metrica (){
+
+
+    var allParas = document.getElementsByName("p");
+
+      for (var i = 0; i < allParas.length; i ++) {
+
+        allParas[i].style.color = "red"; 
+      }
+  }
+
     function buscador() {
+
+      /*document.getElementByTagName("p").style.color = "red";*/
+
+      
+
+
+
+
       var textoxml = document.getElementById('textoxml').textContent;
       var nombresxml = document.getElementById('nombresxml').textContent;
       parser = new DOMParser();
@@ -95,7 +115,7 @@
             <ul class="nav navbar-nav navbar-right">
               <li><a href="indexprincipal.html">Inicio</a></li>
               <li><a href="como.html">¿Cómo funciona?</a></li>
-              <li><a href="teognisgriego_links.html">ἐλεγείων</a></li>
+              <li><a href="teognisgriego_links.html">Ἐλεγείων</a></li>
               <li class="active"><a href="teognisespanol1.html">Elegías</a></li>
               <li><a href="lugares.html">Lugares de la obra</a></li>
             </ul>
@@ -110,7 +130,7 @@
 
       </h1>.</h1>
 
-      <h1 align="center">Elegías</h1>
+      <h1 align="center">ELEGÍAS</h1>
       <br>
 
       <p> Buscador de nombres del texto </p>
@@ -161,16 +181,20 @@
     </select>
 
 
-
-
-      
           <span class="input-group-btn">
       <button class="btn btn-info btn-xs" onclick="buscador()">
         <i class="glyphicon glyphicon-search"></i>
       </button>
     </span>
+
+
         </div>
       </div>
+
+      <form action="">
+      <input onclick= "metrica()" type="checkbox" name="P" value="pentameter">Pentámetros<br>
+      <input onclick= "metrica()" type="checkbox" name="H" value="hexameter">Hexámetros
+    </form>
 
       <br>
 
@@ -195,9 +219,9 @@
                 <div class="col-md-8 col-xs-12">
 
 
-                  <p>Oh soberano, hijo de <a href="#" data-toggle="tooltip" title="En la mitología griega, Leto (en griego antiguo Λητώ Lêtố, en dórico Lato, ‘el olvido ’) es una hija de los titanes Ceo y Febe y, en el panteón olímpico, madre con Zeus de los mellizos Apolo y Artemisa.">Leto</a>, vástago de <span class=""><a href="#" data-toggle="tooltip" title="En la mitología griega, Zeus (en griego antiguo Ζεύς Zeús) es el «padre de los dioses y los hombres», que gobernaba los dioses del Olimpo como un padre a una familia, de forma que incluso los que no eran sus hijos naturales dirigían a él como tal.">Zeus</a></span>,</p>
+                  <p name="p">Oh soberano, hijo de <a href="#" data-toggle="tooltip" title="En la mitología griega, Leto (en griego antiguo Λητώ Lêtố, en dórico Lato, ‘el olvido ’) es una hija de los titanes Ceo y Febe y, en el panteón olímpico, madre con Zeus de los mellizos Apolo y Artemisa.">Leto</a>, vástago de <span class=""><a href="#" data-toggle="tooltip" title="En la mitología griega, Zeus (en griego antiguo Ζεύς Zeús) es el «padre de los dioses y los hombres», que gobernaba los dioses del Olimpo como un padre a una familia, de forma que incluso los que no eran sus hijos naturales dirigían a él como tal.">Zeus</a></span>,</p>
 
-                  <p>de ti nunca me olvidaré al comenzar ni al concluir, sino que siempre el primero,
+                  <p name="p">de ti nunca me olvidaré al comenzar ni al concluir, sino que siempre el primero,
                   </p>
 
                   <p>el último y en medio te cantaré. Mas tú escúchame y concédeme</p>
