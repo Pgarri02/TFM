@@ -5,6 +5,12 @@ body {
 
 }
 
+.img-thumbnail{
+
+	width:340px;
+	height: 220px;
+}
+
 
 h1,h2,h3,h4 {
     font-family: "Chalkboard";
@@ -13,6 +19,11 @@ h1,h2,h3,h4 {
 
 }
 
+.btn-info:hover {
+  color: #fff;
+  background-color: #8B0000	 ;
+  border-color: white;
+}
 
 h3, h4, h5 {
     color: #B22222;
