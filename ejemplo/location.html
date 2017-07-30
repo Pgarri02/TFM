@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" lang="es">
   <link rel="stylesheet" href="../css/bootstrap.css">
-  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="../css/mystyle.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="../js/bootstrap.min.js"></script>
   <script type="text/javascript">
@@ -40,7 +40,7 @@
 
     }
     catch (e) {
-      alert('No se encuentra la palabra');
+      alert('Elige una opción válida');
       dump('Error: Document tree modified during iteration ' + e);
     }
 
@@ -66,11 +66,11 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="indexprincipal.html">Inicio</a></li>
-          <li><a href="como.html">¿Cómo funciona?</a></li>
-          <li><a href="teognisgriego_links.html">Ἐλεγείων</a></li>
-          <li><a href="teognisespanol1.html">Elegías</a></li>
-          <li class="active"><a href="lugares.html">Lugares de la obra</a></li>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="user_guide.html">Guía para el usuario</a></li>
+          <li><a href="greek_text.html">Ἐλεγείων</a></li>
+          <li><a href="spanish_text.html">Elegías</a></li>
+          <li class="active"><a href="location.html">Lugares de la obra</a></li>
         </ul>
       </div>
       <!-- /.navbar-collapse -->
@@ -82,7 +82,7 @@
 
 <body>
   <div class="container">
-    <h1>Lugares de la obra</h1>
+    <h1 align="center">Lugares de la obra</h1>
     <p> Buscador de nombres antiguos de lugares en la obra </p>
       <div class="input-group col-md-3  col-sm-12 col-xs-12">
         <select id="buscalugar" placeholder="Buscar lugares">
@@ -109,7 +109,7 @@
             <button class="btn btn-info btn-xs" onclick="buscaLugares()">
               <i class="glyphicon glyphicon-search"></i>
             </button>
-            <a href="lugares.html">
+            <a href="location.html">
             <button class="btn btn-primary btn-xs" type="reset">
               <i class="glyphicon glyphicon-repeat"></i>
             </button></a>
@@ -135,7 +135,7 @@
       <fileDesc>
         <titleStmt>
           <title>Elegías de Teognis
-            <ptr target="https://es.wikipedia.org/wiki/Teognis/" />
+            <ptr target="https://es.wikipedia.org/wiki/Teognis/"/>
           </title>
           <author>Patricia Garrido Teixeira </author>
           <respStmt>
