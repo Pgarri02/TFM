@@ -5,6 +5,10 @@ body {
 
 }
 
+.colorea {
+    color:	#DC143C ;
+}
+
 #buscalugar{
     width:220px;border:1px solid #04467E;background-color:#0000; color:#2D4167;font-size:14px
 }

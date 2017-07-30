@@ -70,10 +70,10 @@
 <p> La web está formada por distintas pestañas que recogerán los siguientes puntos: </p>
 
 <ul>
-      <li> <a href="indexprincipal.html">Inicio</a>: donde se explican aspectos fundamentales del autor y de su obra </li>
-      <li> <a href="teognisespanol1.html">Elegías</a>: donde se recoge la obra en castellano </li>
-      <li> <a href="teognisgriego_links.html">Elegeiwn</a>: donde se recoge la obra en griego antiguo </li>
-      <li> <a href="lugares.html">Lugares</a>: donde se geolocalizan todos los lugares que aparecen en la obra </li>
+      <li> <a class="colorea" href="indexprincipal.html">Inicio</a>: donde se explican aspectos fundamentales del autor y de su obra </li>
+      <li> <a class="colorea" href="teognisespanol1.html">Elegías</a>: donde se recoge la obra en castellano </li>
+      <li> <a class="colorea"href="teognisgriego_links.html">Ἐλεγείων</a>: donde se recoge la obra en griego antiguo </li>
+      <li> <a class="colorea" href="lugares.html">Lugares</a>: donde se geolocalizan todos los lugares que aparecen en la obra </li>
 
 </ul>
 
@@ -88,7 +88,8 @@
 <p> En la parte superior de la página contamos con un buscador. Este recoge el conjunto de todos los nombres de personajes que aparecen en la obra, tanto de humanos como de dioses. 
     A través del buscador se puede seleccionar el personaje deseado y hacer click en el icono adyacente, lo cual traerá como resultado una tabla
     que recoge información acerca del personaje seleccionado: nombre en griego, nombre en español y descripción del personaje. </p>
-<p> En algunos casos cuando realizamos la búsqueda, aparecerá bajo la tabla un link de "Más información". Esto se producirá en aquellos personajes de los cuales hay mucha más información recogida. El usuario no tiene más que clickar sobre este enlace para conocer más sobre el personaje </p>
+<p> Además, debajo de la tabla de cada personaje aparecerá un link con el nombre "Documento con la información". En este se accede a un PDF con la información presentada en la tabla, con el fin de que el usuario
+    pueda descargarla para guardarla si lo desea. </p>
 
 <h5> Texto de la obra</h5>
 <p> El texto en español aparece agrupado por versos. Se sabe que muchas veces se necesita consultar la traducción de un verso o estrofa, y las largas tiradas de versos sin numerar dificultan esta tarea al usuario.
@@ -129,7 +130,12 @@
 
  <h5> Buscador de lugares </h5>
 
- <p> Además, se cuenta con un buscador de los lugares que aparecen en la obra. De esta manera el usuario puede seleccionar cualquiera de los presentes en la lista del buscador y hacer click en el icono de "buscar". Se recargará sobre el iframe del mapa principal, un mapa particular con el lugar seleccionado. </p>
+ <p> Además, se cuenta con un buscador de los lugares que aparecen en la obra. De esta manera el usuario puede seleccionar cualquiera de los presentes en la lista del buscador y hacer click en el icono de "buscar" (  <button class="btn btn-info btn-xs" onclick="buscaLugares()">
+              <i class="glyphicon glyphicon-search"></i>
+            </button>  ). Se recargará sobre el iframe del mapa principal, un mapa particular con el lugar seleccionado. Para reestablecer el mapa original
+       con todos los lugares, el usuario hará click en el icono de restablecer junto al icono de búsqueda, en azul más oscuro. ( <button class="btn btn-primary btn-xs" type="reset">
+              <i class="glyphicon glyphicon-repeat"></i>
+            </button> )</p>
 </div>
 
 
