@@ -1,4 +1,4 @@
-<!DOCTYPE html   SYSTEM "about:legacy-compat">
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -6,31 +6,19 @@
   <title>Elegías de Teognis</title>
   <meta charset="utf-8" lang="es">
   <link rel="stylesheet" href="../css/bootstrap.css">
-  <link rel="shortcut icon" type="png" href="">
-   <link rel="stylesheet" href="../css/mystyle.css">
+  <link rel="stylesheet" href="../css/mystyle.css">
+  <link rel="shortcut icon" href="img/favicon.jpeg" type="image/x-icon">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="../js/bootstrap.min.js"></script>
-  <script>
+  <script type="text/javascript">
     $(document).ready(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
     $(document).ready(function () {
       $('[data-toggle="popover"]').popover();
     });
-  </script>
-  <script type="text/javascript">
-
-  
 
     function buscador() {
-
-      /*document.getElementByTagName("p").style.color = "red";*/
-
-      
-
-
-
-
       var textoxml = document.getElementById('textoxml').textContent;
       var nombresxml = document.getElementById('nombresxml').textContent;
       parser = new DOMParser();
@@ -79,55 +67,50 @@
         dump('Error: Document tree modified during iteration ' + e);
       }
     }
-    
   </script>
 
 
 </head>
 
 <body class="css">
-  <div id="prueba2" class="container">
-    <div class="col-md-8 col-sm-12 col-xs-12" style="padding-top: 10px;">
-       <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
-        <div class="container topnav">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-              aria-expanded="false">
+  <header>
+    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+      <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+            aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-          </div>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="index.html">Inicio</a></li>
-              <li><a href="user_guide.html">Guía para el usuario</a></li>
-              <li><a href="greek_text.html">Ἐλεγείων</a></li>
-              <li class="active"><a href="spanish_text.html">Elegías</a></li>
-              <li><a href="location.html">Lugares de la obra</a></li>
-            </ul>
-          </div>
-          <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
-      </nav>
-    </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="user_guide.html">Guía para el usuario</a></li>
+            <li><a href="greek_text.html">Ἐλεγείων</a></li>
+            <li class="active"><a href="spanish_text.html">Elegías</a></li>
+            <li><a href="location.html">Lugares de la obra</a></li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+  </header>
+  <div class="container">
     <div class="col-md-12 col-xs-12 col-sm-12">
-      
-
       <h1 align="center">ELEGÍAS</h1>
-      <br>
-
       <p> Buscador de nombres del texto </p>
       <div id="custom-search-input">
         <div class="input-group col-md-3">
 
-          <select style="width:220px;border:1px solid #04467E;background-color:#0000; color:#2D4167;font-size:14px" id="buscapalabra"
-            placeholder="buscar">
+          <select id="buscapalabra" placeholder="buscar">
+      <option value=""></option>
       <option value="Academo"> Academo</option>
       <option value="Agamenon"> Agamenón</option>
       <option value="Alcatoo">Alcatoo</option>
@@ -150,7 +133,7 @@
       <option value="Eeton">Eetón</option>
       <option value="Gracia">Gracia</option>
       <option value="Harpias">Harpías</option>
-      <option value="Leto">Leto</a></option>
+      <option value="Leto">Leto</option>
       <option value="Medos"> Medos</option>
       <option value="Musas">Musas</option>
       <option value="Odiseo"> Odiseo</option>
@@ -171,29 +154,16 @@
       <option value="Zeus">Zeus</option>
       
     </select>
-
-
           <span class="input-group-btn">
       <button class="btn btn-info btn-xs" onclick="buscador()">
         <i class="glyphicon glyphicon-search"></i>
       </button>
     </span>
-
-
         </div>
       </div>
 
-     
-
-      <br>
-
       <!--Elemento vacío para insertar la tabla-->
-      <div id="elementoTabla" style="visibility: hidden;">
-      </div>
-
-
-  
-
+      <div id="elementoTabla" style="visibility: hidden;"></div>
 
       <h3>Libro 1</h3>
       <div class="text-justify" "panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -2267,7 +2237,6 @@
         </div>
       </div>
 
-
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="heading34">
           <h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse34" aria-expanded="false"
@@ -3896,10 +3865,12 @@
       </div>
 
 
-
-
     </div>
   </div>
+
+
+
+<!-- XML -->
 
 
   <iframe id="textoxml" style="display: none;">
