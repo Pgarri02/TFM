@@ -31,37 +31,41 @@
       st2 = "//person[@id='" + nom + "']//*";
       var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
       var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
-      try {
-        // Se van a iterar los dos nodos
-        var node1 = result1.iterateNext();
-        var node2 = result2.iterateNext();
-        // En infoNode1 guardo la información que obtenga del textoxml
-        var infoNode1;
-        // En el array datos guardo la información que obtenga del nombresxml
-        var i = 0;
-        var datos = [];
-        while (node1) {
-          infoNode1 = node1.textContent.toString();
-          node1 = result1.iterateNext();
+        try {
+          // Se van a iterar los dos nodos
+          var node1 = result1.iterateNext();
+          var node2 = result2.iterateNext();
+          // En infoNode1 guardo la información que obtenga del textoxml
+          var infoNode1 = "";
+          // En el array datos guardo la información que obtenga del nombresxml
+          var i = 0;
+          var datos = [];
+          while (node1) {
+            infoNode1 = node1.textContent.toString();
+            node1 = result1.iterateNext();
+          }
+          while (node2) {
+            // Almaceno en el array datos, los campos necesarios para mostrar la tabla
+            datos[i] = node2.textContent.toString();
+            node2 = result2.iterateNext();
+            i++;
+          }
+          if (infoNode1 != "") {
+            // Creación de la tabla con la información
+            var loadTable = '<table class="table table-bordered"><thead><tr><th>' + "Información de" + " " + infoNode1 + '</th></tr></thead>';
+            for (var i = 0; i < datos.length - 1; i++) {
+              loadTable += '</tr><tr><td width="118">' + datos[i] + '</td>';
+            }
+            loadTable += '</tr></table>';
+            loadTable += "<button type='button' class='btn btn-default'><i class='glyphicon glyphicon-download-alt'></i><a target='_blank' href='" + datos[datos.length - 1] + "'> Descargar esta información</a></button>";
+            //Cargo la tabla
+            document.getElementById('elementoTabla').innerHTML = "";
+            $('#elementoTabla').append(loadTable.valueOf());
+            document.getElementById('elementoTabla').style.visibility = 'visible';
+          } else {
+            alert('Elige una opción válida');
+          }
         }
-        while (node2) {
-          // Almaceno en el array datos, los campos necesarios para mostrar la tabla
-          datos[i] = node2.textContent.toString();
-          node2 = result2.iterateNext();
-          i++;
-        }
-        // Creación de la tabla con la información
-        var loadTable = '<table width="1000" border="2" margin="100"><tr><td colspan="2" rowspan="1">' + "Información de" + " " + infoNode1 + '</td>';
-        for (var i = 0; i < datos.length - 1; i++) {
-          loadTable += '</tr><tr><td width="118">' + datos[i] + '</td>';
-        }
-        loadTable += '</tr></table>';
-        loadTable += "<a href='" + datos[datos.length - 1] + "'>Descargar esta información</a>";
-        //Cargo la tabla
-        document.getElementById('elementoTabla').innerHTML = "";
-        $('#elementoTabla').append(loadTable.valueOf());
-        document.getElementById('elementoTabla').style.visibility = 'visible';
-      }
       catch (e) {
         alert('No se encuentra la palabra');
         dump('Error: Document tree modified during iteration ' + e);
@@ -72,7 +76,7 @@
 
 </head>
 
-<body class="css">
+<body>
   <header>
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
       <div class="container topnav">
@@ -105,12 +109,13 @@
   <div class="container">
     <div class="col-md-12 col-xs-12 col-sm-12">
       <h1 align="center">ELEGÍAS</h1>
-      <p> Buscador de nombres del texto </p>
       <div id="custom-search-input">
+      <p> Buscador de nombres del texto </p>
+        
         <div class="input-group col-md-3">
 
           <select id="buscapalabra" placeholder="buscar">
-      
+      <option value="">- - - </option>
       <option value="Academo"> Academo</option>
       <option value="Agamenon"> Agamenón</option>
       <option value="Alcatoo">Alcatoo</option>
@@ -164,7 +169,9 @@
 
       <!--Elemento vacío para insertar la tabla-->
       <div id="elementoTabla" style="visibility: hidden;"></div>
+    </div>
 
+    <div class="col-md-12 col-sm-12 col-xs-12">
       <h3>Libro 1</h3>
       <div class="text-justify" "panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">

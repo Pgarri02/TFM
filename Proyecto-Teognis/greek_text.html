@@ -1,4 +1,4 @@
-<!DOCTYPE html   SYSTEM "about:legacy-compat">
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -11,459 +11,422 @@
   <link rel="shortcut icon" href="img/favicon.jpeg" type="image/x-icon">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="../js/bootstrap.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-
-    $(document).ready(function () {
-      $('[data-toggle="popover"]').popover();
-    });
-  </script>
   <script type="text/javascript">
-            function metrica() {
-              $('#metrics input[type=checkbox]').each(function () {
-                var colorMark;
-                var allParas = document.getElementsByName(this.value);
-                if (this.value == "pen" && this.checked) colorMark = "lightblue";
-                else if (this.value == "hex" && this.checked) colorMark = "pink";
-                else{
-                  colorMark = "none";
-                }
-                for (var i = 0; i < allParas.length; i++)
-                  allParas[i].setAttribute("style", "background-color:" + colorMark + ";");
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 
-              });
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+
+    function metrica() {
+        $('#metrics input[type=checkbox]').each(function () {
+            var colorMark;
+            var allParas = document.getElementsByName(this.value);
+            if (this.value == "pen" && this.checked) colorMark = "lightblue";
+            else if (this.value == "hex" && this.checked) colorMark = "pink";
+            else {
+                colorMark = "none";
+            }
+            for (var i = 0; i < allParas.length; i++)
+                allParas[i].setAttribute("style", "background-color:" + colorMark + ";");
+
+        });
+    }
+
+    function buscador(){
+
+        var textoxml = document.getElementById('textoxml').textContent;
+        var nombresxml = document.getElementById('nombresxml').textContent;
+        parser = new DOMParser();
+        xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
+        xmlDoc2 = parser.parseFromString(nombresxml, "text/xml");
+
+        // Obtengo la palabra a buscar
+        var nom = document.getElementById('buscapalabra').value;
+        // Consultas xPath
+        st1 = "//persName[@corresp='#" + nom + "']";
+        st2 = "//person[@id='" + nom + "']//*";
+
+
+        var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
+        var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
+
+        try {
+            // Se van a iterar los dos nodos
+            var node1 = result1.iterateNext();
+            var node2 = result2.iterateNext();
+
+            // En infoNode1 guardo la información que obtenga del textoxml
+            var infoNode1 = "";
+            // En el array datos guardo la información que obtenga del nombresxml
+            var i = 0;
+            var datos = [];
+            while (node1) {
+                infoNode1 = node1.textContent.toString();
+                node1 = result1.iterateNext();
+            }
+            while (node2) {
+                // Almaceno en el array datos, los campos necesarios para mostrar la tabla
+                datos[i] = node2.textContent.toString();
+                node2 = result2.iterateNext();
+                i++;
+            }
+            if(infoNode1 != ""){
+            // Creación de la tabla con la información
+            var loadTable = '<table class="table table-bordered"><thead><tr><th>' + "Información de" + " " + infoNode1 + '</th></tr></thead>';
+            for (var i = 0; i < datos.length - 1; i++) {
+                loadTable += '</tr><tr><td width="118">' + datos[i] + '</td>';
+            }
+            loadTable += '</tr></table>';
+            loadTable += "<button type='button' class='btn btn-default'><i class='glyphicon glyphicon-download-alt'></i><a target='_blank' href='" + datos[datos.length - 1] + "'> Descargar esta información</a></button>";
+
+            //Cargo la tabla
+            document.getElementById('elementoTabla').innerHTML = "";
+            $('#elementoTabla').append(loadTable.valueOf());
+            document.getElementById('elementoTabla').style.visibility = 'visible';
+            } else{
+                alert('Elige una opción válida');
             }
 
-    function buscador() {
-
-      var textoxml = document.getElementById('textoxml').textContent;
-      var nombresxml = document.getElementById('nombresxml').textContent;
-      parser = new DOMParser();
-      xmlDoc1 = parser.parseFromString(textoxml, "text/xml");
-      xmlDoc2 = parser.parseFromString(nombresxml, "text/xml");
-
-      // Obtengo la palabra a buscar
-      var nom = document.getElementById('buscapalabra').value;
-      // Consultas xPath
-      st1 = "//persName[@corresp='#" + nom + "']";
-      st2 = "//person[@id='" + nom + "']//*";
-
-
-      var result1 = xmlDoc1.evaluate(st1, xmlDoc1, null, XPathResult.ITERATOR, null);
-      var result2 = xmlDoc2.evaluate(st2, xmlDoc2, null, XPathResult.ITERATOR, null);
-
-      try {
-        // Se van a iterar los dos nodos
-        var node1 = result1.iterateNext();
-        var node2 = result2.iterateNext();
-
-        // En infoNode1 guardo la información que obtenga del textoxml
-        var infoNode1;
-        // En el array datos guardo la información que obtenga del nombresxml
-        var i = 0;
-        var datos = [];
-        while (node1) {
-          infoNode1 = node1.textContent.toString();
-          node1 = result1.iterateNext();
         }
-        while (node2) {
-          // Almaceno en el array datos, los campos necesarios para mostrar la tabla
-          datos[i] = node2.textContent.toString();
-          node2 = result2.iterateNext();
-          i++;
+        catch (e) {
+            alert('No se encuentra la palabra');
+            dump('Error: Document tree modified during iteration ' + e);
         }
-        // Creación de la tabla con la información
-        var loadTable = '<table width="1000" border="2" margin="100"><tr><td colspan="2" rowspan="1">' + "Información de" + " " + infoNode1 + '</td>';
-        for (var i = 0; i < datos.length - 1; i++) {
-          loadTable += '</tr><tr><td width="118">' + datos[i] + '</td>';
-        }
-        loadTable += '</tr></table>';
-        loadTable += "<a href='" + datos[datos.length - 1] + "'>Descargar esta información</a>";
-
-        //Cargo la tabla
-        document.getElementById('elementoTabla').innerHTML = "";
-        $('#elementoTabla').append(loadTable.valueOf());
-        document.getElementById('elementoTabla').style.visibility = 'visible';
-
-      }
-      catch (e) {
-        alert('No se encuentra la palabra');
-        dump('Error: Document tree modified during iteration ' + e);
-      }
     }
   </script>
 
-
 </head>
 
-<body class="css">
-  <div id="prueba2" class="container">
-
-
-
-
-
-
-
-
-    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 10px;">
-      <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
-        <div class="container topnav">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-              aria-expanded="false">
+<body>
+  <header>
+    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+      <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+            aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-          </div>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="index.html">Inicio</a></li>
-              <li><a href="user_guide.html">Guía para el usuario</a></li>
-              <li class="active"><a href="greek_text.html">Ἐλεγείων</a></li>
-              <li><a href="spanish_text.html">Elegías</a></li>
-              <li><a href="location.html">Lugares de la obra</a></li>
-            </ul>
-          </div>
-          <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
-      </nav>
-    </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="user_guide.html">Guía para el usuario</a></li>
+            <li class="active"><a href="greek_text.html">Ἐλεγείων</a></li>
+            <li><a href="spanish_text.html">Elegías</a></li>
+            <li><a href="location.html">Lugares de la obra</a></li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+  </header>
+
+  <div class="container">
     <div class="col-md-12 col-xs-12 col-sm-12">
-      
+      <h1 align="center">ἘΛΕΓΕÍΩΝ</h1>
+        <div id="custom-search-input">
+        <p> Buscador de nombres del texto </p>
+        <div class="input-group col-md-3">
+            <select id="buscapalabra" placeholder="buscar">
+                <option value="">- - - </option>          
+                <option value="Academo">Ἀκάδημος</option>
+                <option value="Agamenon">Ἀγαμέμνων</option>
+                <option value="Alcatoo">Ἀλκάθοος</option>
+                <option value="Apolo">Ἀπόλλων</option>
+                <option value="Arguiris">Aργυρίς</option>
+                <option value="Artemis">Ἄρτεμις</option>
+                <option value="Asclepiadas">Ἀσκληπιάδαι</option>
+                <option value="Boreas">Βορέας</option>
+                <option value="Cadmo">Κάδμος </option>
+                <option value="Castorypolideuces">Κάστωρ καί Πολυδεύκης</option>
+                <option value="Ceres">Κήρ</option>
+                <option value="Clearisto">Κλεάριστος </option>
+                <option value="Cirno">Κύρνος </option>
+                <option value="Cipselidas">Κυψελιδέων</option>
+                <option value="Confianza">Πίστις</option>
+                <option value="Democles">Δημόκλες</option>
+                <option value="Demonacte">Δημῶναξ </option>
+                <option value="Dionisio">Διωνύσος </option>
+                <option value="Esperanza">Eλπίς</option>
+                <option value="Eeton">Αἴθων</option>
+                <option value="Gracia">Χάρις</option>
+                <option value="Harpias">Ἅρπυιαι</option>
+                <option value="Leto">Λητώ </option>
+                <option value="Medos">Μῆδος </option>
+                <option value="Musas">Μοῦσαι</option>
+                <option value="Odiseo">Ὀδυσσεύς </option>
+                <option value="Onomacrito">Ὀνομάκριτοι</option>
+                <option value="Pelope">Πέλοψ </option>
+                <option value="Pobreza">Πενία</option>
+                <option value="Persefone">Περσεφόνη </option>
+                <option value="Pluto">Πλοῦτος </option>
+                <option value="Polipaides">Πολυπαΐδης </option>
+                <option value="Poseidon">Ποσειδῶν</option>
+                <option value="Radamantis">Ῥαδάμανθυς</option>
+                <option value="Simonides">Σιμωνίδης</option>
+                <option value="Sisifo">Σίσυφος </option>
+                <option value="Sofrosine">Σωφρόσυνος</option>
+                <option value="Teotimos">θεότιμος </option>
+                <option value="Teognis">Θεύγνις Mεγαρέως </option>
+                <option value="Timagora">Τιμαγόρα</option>
+                <option value="Zeus">Ζεύς </option>
+            </select>
+            <span class="input-group-btn">
+                <button class="btn btn-info btn-xs" onclick="buscador()">
+                <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </span>
+        </div>
+        </div>
+    <div id="elementoTabla" style="visibility: hidden;"></div>
+    </div>
 
-      <h2 align="center">ἘΛΕΓΕÍΩΝ</h1>
-        <br>
+    <div class="col-md-12 col-sm-12 col-xs-12" id="checkMetrica">
+        <p>Selecciona el tipo de verso que deseas identificar en el texto:</p>
+        <div id="metrics" class="checkbox">
+            <label><input  onclick="metrica()" type="checkbox" value="pen">Pentámetros</label>
+            <br>
+            <label><input  onclick="metrica()" type="checkbox" value="hex">Hexámetros</label>
+        </div>
+    </div>
+</div>  
 
 
-
-
-<div class="col-md-12 col-sm-12 col-xs-12">
-    <br>
-          <p> Buscador de nombres del texto </p>
-          <div id="custom-search-input">
-            <div class="input-group col-md-3">
-
-
-
-              <select style="width:220px;border:1px solid #04467E;background-color:#0000; color:#2D4167;font-size:14px" id="buscapalabra"
-                placeholder="buscar">
-    
-      <option value="Academo">Ἀκάδημος</option>
-      <option value="Agamenon">Ἀγαμέμνων</option>
-      <option value="Alcatoo">Ἀλκάθοος</option>
-      <option value="Apolo">Ἀπόλλων</option>
-      <option value="Arguiris">Aργυρίς</option>
-      <option value="Artemis">Ἄρτεμις</option>
-      <option value="Asclepiadas">Ἀσκληπιάδαι</option>
-      <option value="Boreas">Βορέας</option>
-      <option value="Cadmo">Κάδμος </option>
-      <option value="Castorypolideuces">Κάστωρ καί Πολυδεύκης</option>
-      <option value="Ceres">Κήρ</option>
-      <option value="Clearisto">Κλεάριστος </option>
-      <option value="Cirno">Κύρνος </option>
-      <option value="Cipselidas">Κυψελιδέων</option>
-      <option value="Confianza">Πίστις</option>
-      <option value="Democles">Δημόκλες</option>
-      <option value="Demonacte">Δημῶναξ </option>
-      <option value="Dionisio">Διωνύσος </option>
-      <option value="Esperanza">Eλπίς</option>
-    <option value="Eeton">Αἴθων</option>
-      <option value="Gracia">Χάρις</option>
-      <option value="Harpias">Ἅρπυιαι</option>
-      <option value="Leto">Λητώ </option>
-      <option value="Medos">Μῆδος </option>
-      <option value="Musas">Μοῦσαι</option>
-      <option value="Odiseo">Ὀδυσσεύς </option>
-      <option value="Onomacrito">Ὀνομάκριτοι</option>
-      <option value="Pelope">Πέλοψ </option>
-      <option value="Pobreza">Πενία</option>
-      <option value="Persefone">Περσεφόνη </option>
-      <option value="Pluto">Πλοῦτος </option>
-      <option value="Polipaides">Πολυπαΐδης </option>
-      <option value="Poseidon">Ποσειδῶν</option>
-      <option value="Radamantis">Ῥαδάμανθυς</option>
-      <option value="Simonides">Σιμωνίδης</option>
-      <option value="Sisifo">Σίσυφος </option>
-      <option value="Sofrosine">Σωφρόσυνος</option>
-      <option value="Teotimos">θεότιμος </option>
-      <option value="Teognis">Θεύγνις Mεγαρέως </option>
-      <option value="Timagora">Τιμαγόρα</option>
-      <option value="Zeus">Ζεύς </option>
-    </select>
-              <span class="input-group-btn">
-      <button class="btn btn-info btn-xs" onclick="buscador()">
-        <i class="glyphicon glyphicon-search"></i>
-      </button>
-    </span>
+<div class="container">
+    <h3> Libro 1</h3>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
+                aria-controls="collapseOne">Versos del 1 al 52</a></h4>
             </div>
-          </div>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <div class="col-md-12 col-xs-12">
+                <div class="micss col-md-8 col-xs-12">
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Ὦ">Ὦ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄνα">ἄνα</a>,
+                    <a target="_blank" href="http://logeion.uchicago.edu/index.html#Λητοῦς">Λητοῦς</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#υἱέ">υἱέ</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#Διὸς">Διὸς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τέκος">τέκος</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#οὔποτε">οὔποτε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#σεῖο">σεῖο</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#λήσομαι">λήσομαι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἀρχόμενος">ἀρχόμενος</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδ᾽">οὐδ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀποπαυόμενος">ἀποπαυόμενος</a>,</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀλλ᾽">ἀλλ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἰεὶ">αἰεὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πρῶτόν">πρῶτόν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#τε">τε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὕστατον">ὕστατον</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἔν">ἔν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τε">τε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μέσοισιν">μέσοισιν</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀείσω:">ἀείσω:</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#σὺ">σὺ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δέ">δέ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μοι">μοι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κλῦθι">κλῦθι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐσθλὰ">ἐσθλὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δίδου">δίδου</a>.</p>
+                    <br>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Φοῖβε">Φοῖβε</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἄναξ">ἄναξ</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὅτε">ὅτε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μέν">μέν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#σε">σε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#θεὰ">θεὰ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τέκε">τέκε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πότνια">πότνια</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#Λητώ">Λητώ</a>,</p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#φοίνικος">φοίνικος</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ῥαδινῇς">ῥαδινῇς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#χερσὶν">χερσὶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐφαψαμένη">ἐφαψαμένη</a>,</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀθανάτων">ἀθανάτων</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#κάλλιστον">κάλλιστον</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπὶ">ἐπὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τροχοειδέϊ">τροχοειδέϊ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#λίμνῃ">λίμνῃ</a>,</p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#πᾶσα">πᾶσα</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπλήσθη">ἐπλήσθη</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#Δῆλος">Δῆλος</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀπειρεσίη">ἀπειρεσίη</a></p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ὀδμῆς">ὀδμῆς</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἀμβροσίης">ἀμβροσίης</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐγέλασσε">ἐγέλασσε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γαῖα">γαῖα</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πελώρη">πελώρη</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#γήθησεν">γήθησεν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#βαθὺς">βαθὺς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πόντος">πόντος</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἁλὸς">ἁλὸς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#πολιῆς">πολιῆς</a></p>
+                    <br>
 
 
-           <div id="elementoTabla" style="visibility: hidden;">
-          </div>
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Ἄρτεμι">Ἄρτεμι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#θηροφόνη">θηροφόνη</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#θύγατερ">θύγατερ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#Διός">Διός</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἣν">ἣν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#Ἀγαμέμνων">Ἀγαμέμνων</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εἵσαθ᾽">εἵσαθ᾽</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ὅτ᾽">ὅτ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐς">ἐς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#Τροίην">Τροίην</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἔπλεε">ἔπλεε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#νηυσὶ">νηυσὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#θοῇς">θοῇς</a>,</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὐχομένῳ">εὐχομένῳ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μοι">μοι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κλῦθι">κλῦθι</a>,
+                    <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακὰς">κακὰς</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀπὸ">ἀπὸ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κῆρας">κῆρας</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἄλαλκε:">ἄλαλκε:</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#σοὶ">σοὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῦτο">τοῦτο</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#θεά">θεά</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#σμικρόν">σμικρόν</a>,
+                    <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐμοὶ">ἐμοὶ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μέγα">μέγα</a>.</p>
+                    <br>
+
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Μοῦσαι">Μοῦσαι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#Χάριτες">Χάριτες</a>,
+                    <a target="_blank" href="http://logeion.uchicago.edu/index.html#κοῦραι">κοῦραι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#Διός">Διός</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἵ">αἵ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ποτε">ποτε</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#Κάδμου">Κάδμου</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐς">ἐς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γάμον">γάμον</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐλθοῦσαι">ἐλθοῦσαι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#καλὸν">καλὸν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀείσατ᾽">ἀείσατ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔπος:">ἔπος:</a></p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#‘ὅττι">‘ὅττι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#καλόν">καλόν</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#φίλον">φίλον</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐστι">ἐστι</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#τὸ">τὸ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐ">οὐ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καλὸν">καλὸν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐ">οὐ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#φίλον">φίλον</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐστίν:’">ἐστίν:’</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῦτ᾽">τοῦτ᾽</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἔπος">ἔπος</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀθανάτων">ἀθανάτων</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἦλθε">ἦλθε</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#διὰ">διὰ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#στομάτων">στομάτων</a>.</p>
+                    <br>
+
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρνε">Κύρνε</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#σοφιζομένῳ">σοφιζομένῳ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐμοὶ">ἐμοὶ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#σφρηγὶς">σφρηγὶς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπικείσθω">ἐπικείσθω</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσδ᾽">τοῖσδ᾽</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἔπεσιν">ἔπεσιν</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#λήσει">λήσει</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔποτε">οὔποτε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κλεπτόμενα">κλεπτόμενα</a>,</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδέ">οὐδέ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τις">τις</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀλλάξει">ἀλλάξει</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#κάκιον">κάκιον</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοὐσθλοῦ">τοὐσθλοῦ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#παρεόντος">παρεόντος</a>,</p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ὧδε">ὧδε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πᾶς">πᾶς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τις">τις</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐρεῖ:">ἐρεῖ:</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#‘Θεύγνιδός">‘Θεύγνιδός</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐστιν">ἐστιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔπη">ἔπη</a></p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῦ">τοῦ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#Μεγαρέως">Μεγαρέως</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πάντας">πάντας</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κατ᾽">κατ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνθρώπους">ἀνθρώπους</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ὀνομαστοῦ">ὀνομαστοῦ</a>,<a target="_blank" href="http://logeion.uchicago.edu/index.html#’">’</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀστοῖσιν">ἀστοῖσιν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔπω">οὔπω</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πᾶσιν">πᾶσιν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἁδεῖν">ἁδεῖν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δύναμαι:">δύναμαι:</a></p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδὲν">οὐδὲν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#θαυμαστόν">θαυμαστόν</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#Πολυπαΐδη:">Πολυπαΐδη:</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδὲ">οὐδὲ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὁ">ὁ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#Ζεὺς">Ζεὺς</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔθ᾽">οὔθ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὕων">ὕων</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πάντεσσ᾽">πάντεσσ᾽</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἁνδάνει">ἁνδάνει</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔτ᾽">οὔτ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνέχων">ἀνέχων</a>.</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#σοὶ">σοὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐγὼ">ἐγὼ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#εὖ">εὖ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#φρονέων">φρονέων</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ὑποθήσομαι">ὑποθήσομαι</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#οἷά">οἷά</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#περ">περ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αὐτός">αὐτός</a>,</p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρν᾽">Κύρν᾽</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἀπὸ">ἀπὸ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῶν">τῶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθῶν">ἀγαθῶν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#παῖς">παῖς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔτ᾽">ἔτ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐὼν">ἐὼν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔμαθον">ἔμαθον</a>.</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#πέπνυσο">πέπνυσο</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἰσχροῖσιν">αἰσχροῖσιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπ᾽">ἐπ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔργμασι">ἔργμασι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἀδίκοισιν">ἀδίκοισιν</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τιμὰς">τιμὰς</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀρετὰς">ἀρετὰς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἕλκεο">ἕλκεο</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄφενος">ἄφενος</a>.</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ταῦτα">ταῦτα</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὕτως">οὕτως</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἴσθι:">ἴσθι:</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#κακοῖσι">κακοῖσι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὴ">μὴ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#προσομίλει">προσομίλει</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνδράσιν">ἀνδράσιν</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἀλλ᾽">ἀλλ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἰεὶ">αἰεὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῶν">τῶν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθῶν">ἀγαθῶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔχεο:">ἔχεο:</a></p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#παρὰ">παρὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσιν">τοῖσιν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#πῖνε">πῖνε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔσθιε">ἔσθιε</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μετὰ">μετὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσιν">τοῖσιν</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἵζε">ἵζε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἅνδανε">ἅνδανε</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#τοῖς">τοῖς</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὧν">ὧν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μεγάλη">μεγάλη</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δύναμις">δύναμις</a>.</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐσθλῶν">ἐσθλῶν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄπ᾽">ἄπ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐσθλὰ">ἐσθλὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μαθήσεαι:">μαθήσεαι:</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἢν">ἢν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακοῖσιν">κακοῖσιν</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#συμμίσγῃς">συμμίσγῃς</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἀπολεῖς">ἀπολεῖς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τὸν">τὸν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐόντα">ἐόντα</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#νόον">νόον</a>.</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ταῦτα">ταῦτα</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μαθὼν">μαθὼν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθοῖσιν">ἀγαθοῖσιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὁμίλεε">ὁμίλεε</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ποτε">ποτε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#φήσεις">φήσεις</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὖ">εὖ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#συμβουλεύειν">συμβουλεύειν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσι">τοῖσι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#φίλοισιν">φίλοισιν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐμέ">ἐμέ</a>.
+                    </p>
+                    <br>
+
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρνε">Κύρνε</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#κύει">κύει</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#πόλις">πόλις</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἥδε">ἥδε</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δέδοικα">δέδοικα</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὴ">μὴ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τέκῃ">τέκῃ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄνδρα">ἄνδρα</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὐθυντῆρα">εὐθυντῆρα</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#κακῆς">κακῆς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὕβριος">ὕβριος</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἡμετέρης">ἡμετέρης</a>.</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀστοὶ">ἀστοὶ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔθ᾽">ἔθ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οἵδε">οἵδε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#σαόφρονες">σαόφρονες</a>, <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἡγεμόνες">ἡγεμόνες</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τετράφαται">τετράφαται</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#πολλὴν">πολλὴν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐς">ἐς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακότητα">κακότητα</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#πεσεῖν">πεσεῖν</a>.</p>
+                    <br>
+
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδεμίαν">οὐδεμίαν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#πω">πω</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρν᾽">Κύρν᾽</a>,
+                    <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθοὶ">ἀγαθοὶ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#πόλιν">πόλιν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὤλεσαν">ὤλεσαν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄνδρες:">ἄνδρες:</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀλλ᾽">ἀλλ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὅταν">ὅταν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὑβρίζειν">ὑβρίζειν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#τοῖσι">τοῖσι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακοῖσιν">κακοῖσιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἅδῃ">ἅδῃ</a></p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#δῆμόν">δῆμόν</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#τε">τε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#φθείρωσι">φθείρωσι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δίκας">δίκας</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#τ᾽">τ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀδίκοισι">ἀδίκοισι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#διδῶσιν">διδῶσιν</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οἰκείων">οἰκείων</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#κερδέων">κερδέων</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#εἵνεκα">εἵνεκα</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κράτεος">κράτεος</a>,</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔλπεο">ἔλπεο</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μὴ">μὴ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δηρὸν">δηρὸν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κείνην">κείνην</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#πόλιν">πόλιν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀτρεμιεῖσθαι">ἀτρεμιεῖσθαι</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#εἰ">εἰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#νῦν">νῦν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κεῖται">κεῖται</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πολλῇ">πολλῇ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἐν">ἐν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἡσυχίῃ">ἡσυχίῃ</a>,</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὖτ᾽">εὖτ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἂν">ἂν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσι">τοῖσι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#κακοῖσι">κακοῖσι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#φίλ᾽">φίλ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνδράσι">ἀνδράσι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ταῦτα">ταῦτα</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γένηται">γένηται</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#κέρδεα">κέρδεα</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#δημοσίῳ">δημοσίῳ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#σὺν">σὺν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακῷ">κακῷ</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#ἐρχόμενα">ἐρχόμενα</a>.</p>
+
+                    <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐκ">ἐκ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῶν">τῶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#στάσιές">στάσιές</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τε">τε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔμφυλοι">ἔμφυλοι</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#φόνοι">φόνοι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνδρῶν">ἀνδρῶν</a></p>
+
+                    <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#μούναρχοί">μούναρχοί</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#θ᾽:">θ᾽:</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἃ">ἃ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πόλει">πόλει</a> <a target="_blank"
+                        href="http://logeion.uchicago.edu/index.html#μήποτε">μήποτε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῇδε">τῇδε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἅδοι">ἅδοι</a>.</p>
         </div>
-
-         <div class="col-md-12 col-sm-12 col-xs-12">
-           <p>Selecciona el tipo de verso que deseas identificar en el texto:</p> 
-        <div id="metrics">
-          <input  onclick="metrica()" type="checkbox" value="pen">Pentámetros<br>
-          <input  onclick="metrica()" type="checkbox" value="hex">Hexámetros<br>
-<br>
         </div>
-        </div>
-        
-
-
-          <h3> Libro 1</h3>
-
-
-          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-default">
-              <div class="panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
-                    aria-controls="collapseOne">
-                           Versos del 1 al 
-                           
-                           52</a></h4>
-              </div>
-              <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body">
-                  <div class="col-md-12 col-xs-12">
-                    <div class="micss col-md-8 col-xs-12">
-
-
-
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Ὦ">Ὦ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄνα">ἄνα</a>,
-                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#Λητοῦς">Λητοῦς</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#υἱέ">υἱέ</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#Διὸς">Διὸς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τέκος">τέκος</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#οὔποτε">οὔποτε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#σεῖο">σεῖο</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#λήσομαι">λήσομαι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἀρχόμενος">ἀρχόμενος</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδ᾽">οὐδ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀποπαυόμενος">ἀποπαυόμενος</a>,</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀλλ᾽">ἀλλ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἰεὶ">αἰεὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πρῶτόν">πρῶτόν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#τε">τε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὕστατον">ὕστατον</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἔν">ἔν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τε">τε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μέσοισιν">μέσοισιν</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀείσω:">ἀείσω:</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#σὺ">σὺ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δέ">δέ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μοι">μοι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κλῦθι">κλῦθι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐσθλὰ">ἐσθλὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δίδου">δίδου</a>.</p>
-                      <br>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Φοῖβε">Φοῖβε</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἄναξ">ἄναξ</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὅτε">ὅτε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μέν">μέν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#σε">σε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#θεὰ">θεὰ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τέκε">τέκε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πότνια">πότνια</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#Λητώ">Λητώ</a>,</p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#φοίνικος">φοίνικος</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ῥαδινῇς">ῥαδινῇς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#χερσὶν">χερσὶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐφαψαμένη">ἐφαψαμένη</a>,</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀθανάτων">ἀθανάτων</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#κάλλιστον">κάλλιστον</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπὶ">ἐπὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τροχοειδέϊ">τροχοειδέϊ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#λίμνῃ">λίμνῃ</a>,</p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#πᾶσα">πᾶσα</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπλήσθη">ἐπλήσθη</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#Δῆλος">Δῆλος</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀπειρεσίη">ἀπειρεσίη</a></p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ὀδμῆς">ὀδμῆς</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἀμβροσίης">ἀμβροσίης</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐγέλασσε">ἐγέλασσε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γαῖα">γαῖα</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πελώρη">πελώρη</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#γήθησεν">γήθησεν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#βαθὺς">βαθὺς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πόντος">πόντος</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἁλὸς">ἁλὸς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#πολιῆς">πολιῆς</a></p>
-                      <br>
-
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Ἄρτεμι">Ἄρτεμι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#θηροφόνη">θηροφόνη</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#θύγατερ">θύγατερ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#Διός">Διός</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἣν">ἣν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#Ἀγαμέμνων">Ἀγαμέμνων</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εἵσαθ᾽">εἵσαθ᾽</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ὅτ᾽">ὅτ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐς">ἐς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#Τροίην">Τροίην</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἔπλεε">ἔπλεε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#νηυσὶ">νηυσὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#θοῇς">θοῇς</a>,</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὐχομένῳ">εὐχομένῳ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μοι">μοι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κλῦθι">κλῦθι</a>,
-                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακὰς">κακὰς</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀπὸ">ἀπὸ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κῆρας">κῆρας</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἄλαλκε:">ἄλαλκε:</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#σοὶ">σοὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῦτο">τοῦτο</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#θεά">θεά</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#σμικρόν">σμικρόν</a>,
-                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐμοὶ">ἐμοὶ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μέγα">μέγα</a>.</p>
-                      <br>
-
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Μοῦσαι">Μοῦσαι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#Χάριτες">Χάριτες</a>,
-                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κοῦραι">κοῦραι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#Διός">Διός</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἵ">αἵ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ποτε">ποτε</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#Κάδμου">Κάδμου</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐς">ἐς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γάμον">γάμον</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐλθοῦσαι">ἐλθοῦσαι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#καλὸν">καλὸν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀείσατ᾽">ἀείσατ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔπος:">ἔπος:</a></p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#‘ὅττι">‘ὅττι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#καλόν">καλόν</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#φίλον">φίλον</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐστι">ἐστι</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#τὸ">τὸ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐ">οὐ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καλὸν">καλὸν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐ">οὐ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#φίλον">φίλον</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐστίν:’">ἐστίν:’</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῦτ᾽">τοῦτ᾽</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἔπος">ἔπος</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀθανάτων">ἀθανάτων</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἦλθε">ἦλθε</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#διὰ">διὰ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#στομάτων">στομάτων</a>.</p>
-                      <br>
-
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρνε">Κύρνε</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#σοφιζομένῳ">σοφιζομένῳ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐμοὶ">ἐμοὶ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#σφρηγὶς">σφρηγὶς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπικείσθω">ἐπικείσθω</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσδ᾽">τοῖσδ᾽</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἔπεσιν">ἔπεσιν</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#λήσει">λήσει</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔποτε">οὔποτε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κλεπτόμενα">κλεπτόμενα</a>,</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδέ">οὐδέ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τις">τις</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀλλάξει">ἀλλάξει</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#κάκιον">κάκιον</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοὐσθλοῦ">τοὐσθλοῦ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#παρεόντος">παρεόντος</a>,</p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ὧδε">ὧδε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πᾶς">πᾶς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τις">τις</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐρεῖ:">ἐρεῖ:</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#‘Θεύγνιδός">‘Θεύγνιδός</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐστιν">ἐστιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔπη">ἔπη</a></p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῦ">τοῦ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#Μεγαρέως">Μεγαρέως</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πάντας">πάντας</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κατ᾽">κατ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνθρώπους">ἀνθρώπους</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ὀνομαστοῦ">ὀνομαστοῦ</a>,<a target="_blank" href="http://logeion.uchicago.edu/index.html#’">’</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀστοῖσιν">ἀστοῖσιν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔπω">οὔπω</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πᾶσιν">πᾶσιν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἁδεῖν">ἁδεῖν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δύναμαι:">δύναμαι:</a></p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδὲν">οὐδὲν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#θαυμαστόν">θαυμαστόν</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#Πολυπαΐδη:">Πολυπαΐδη:</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδὲ">οὐδὲ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὁ">ὁ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#Ζεὺς">Ζεὺς</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔθ᾽">οὔθ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὕων">ὕων</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πάντεσσ᾽">πάντεσσ᾽</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἁνδάνει">ἁνδάνει</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὔτ᾽">οὔτ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνέχων">ἀνέχων</a>.</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#σοὶ">σοὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δ᾽">δ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐγὼ">ἐγὼ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#εὖ">εὖ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#φρονέων">φρονέων</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ὑποθήσομαι">ὑποθήσομαι</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#οἷά">οἷά</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#περ">περ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αὐτός">αὐτός</a>,</p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρν᾽">Κύρν᾽</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἀπὸ">ἀπὸ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῶν">τῶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθῶν">ἀγαθῶν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#παῖς">παῖς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔτ᾽">ἔτ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐὼν">ἐὼν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔμαθον">ἔμαθον</a>.</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#πέπνυσο">πέπνυσο</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἰσχροῖσιν">αἰσχροῖσιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐπ᾽">ἐπ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔργμασι">ἔργμασι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἀδίκοισιν">ἀδίκοισιν</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τιμὰς">τιμὰς</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀρετὰς">ἀρετὰς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἕλκεο">ἕλκεο</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄφενος">ἄφενος</a>.</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ταῦτα">ταῦτα</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οὕτως">οὕτως</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἴσθι:">ἴσθι:</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#κακοῖσι">κακοῖσι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὴ">μὴ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#προσομίλει">προσομίλει</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνδράσιν">ἀνδράσιν</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἀλλ᾽">ἀλλ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#αἰεὶ">αἰεὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῶν">τῶν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθῶν">ἀγαθῶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔχεο:">ἔχεο:</a></p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#παρὰ">παρὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσιν">τοῖσιν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#πῖνε">πῖνε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔσθιε">ἔσθιε</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#μετὰ">μετὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσιν">τοῖσιν</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἵζε">ἵζε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἅνδανε">ἅνδανε</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#τοῖς">τοῖς</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὧν">ὧν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μεγάλη">μεγάλη</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δύναμις">δύναμις</a>.</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐσθλῶν">ἐσθλῶν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄπ᾽">ἄπ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐσθλὰ">ἐσθλὰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μαθήσεαι:">μαθήσεαι:</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἢν">ἢν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακοῖσιν">κακοῖσιν</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#συμμίσγῃς">συμμίσγῃς</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἀπολεῖς">ἀπολεῖς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τὸν">τὸν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐόντα">ἐόντα</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#νόον">νόον</a>.</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ταῦτα">ταῦτα</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μαθὼν">μαθὼν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθοῖσιν">ἀγαθοῖσιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὁμίλεε">ὁμίλεε</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ποτε">ποτε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#φήσεις">φήσεις</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὖ">εὖ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#συμβουλεύειν">συμβουλεύειν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσι">τοῖσι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#φίλοισιν">φίλοισιν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐμέ">ἐμέ</a>.
-                        </p>
-                      <br>
-
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρνε">Κύρνε</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#κύει">κύει</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#πόλις">πόλις</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἥδε">ἥδε</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δέδοικα">δέδοικα</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#μὴ">μὴ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τέκῃ">τέκῃ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄνδρα">ἄνδρα</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὐθυντῆρα">εὐθυντῆρα</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#κακῆς">κακῆς</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὕβριος">ὕβριος</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἡμετέρης">ἡμετέρης</a>.</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀστοὶ">ἀστοὶ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μὲν">μὲν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔθ᾽">ἔθ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#οἵδε">οἵδε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#σαόφρονες">σαόφρονες</a>, <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἡγεμόνες">ἡγεμόνες</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δὲ">δὲ</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#τετράφαται">τετράφαται</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#πολλὴν">πολλὴν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐς">ἐς</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακότητα">κακότητα</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#πεσεῖν">πεσεῖν</a>.</p>
-                      <br>
-
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οὐδεμίαν">οὐδεμίαν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#πω">πω</a>, <a target="_blank" href="http://logeion.uchicago.edu/index.html#Κύρν᾽">Κύρν᾽</a>,
-                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀγαθοὶ">ἀγαθοὶ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#πόλιν">πόλιν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὤλεσαν">ὤλεσαν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἄνδρες:">ἄνδρες:</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀλλ᾽">ἀλλ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὅταν">ὅταν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ὑβρίζειν">ὑβρίζειν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#τοῖσι">τοῖσι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακοῖσιν">κακοῖσιν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἅδῃ">ἅδῃ</a></p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#δῆμόν">δῆμόν</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#τε">τε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#φθείρωσι">φθείρωσι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#δίκας">δίκας</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#τ᾽">τ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀδίκοισι">ἀδίκοισι</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#διδῶσιν">διδῶσιν</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#οἰκείων">οἰκείων</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#κερδέων">κερδέων</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#εἵνεκα">εἵνεκα</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κράτεος">κράτεος</a>,</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔλπεο">ἔλπεο</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μὴ">μὴ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#δηρὸν">δηρὸν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κείνην">κείνην</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#πόλιν">πόλιν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀτρεμιεῖσθαι">ἀτρεμιεῖσθαι</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#μηδ᾽">μηδ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#εἰ">εἰ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#νῦν">νῦν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#κεῖται">κεῖται</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πολλῇ">πολλῇ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἐν">ἐν</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἡσυχίῃ">ἡσυχίῃ</a>,</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#εὖτ᾽">εὖτ᾽</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἂν">ἂν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τοῖσι">τοῖσι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#κακοῖσι">κακοῖσι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#φίλ᾽">φίλ᾽</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνδράσι">ἀνδράσι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ταῦτα">ταῦτα</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#γένηται">γένηται</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#κέρδεα">κέρδεα</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#δημοσίῳ">δημοσίῳ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#σὺν">σὺν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#κακῷ">κακῷ</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#ἐρχόμενα">ἐρχόμενα</a>.</p>
-
-                      <p name="hex"><a target="_blank" href="http://logeion.uchicago.edu/index.html#ἐκ">ἐκ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῶν">τῶν</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#γὰρ">γὰρ</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#στάσιές">στάσιές</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#τε">τε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#καὶ">καὶ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἔμφυλοι">ἔμφυλοι</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#φόνοι">φόνοι</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἀνδρῶν">ἀνδρῶν</a></p>
-
-                      <p name="pen"><a target="_blank" href="http://logeion.uchicago.edu/index.html#μούναρχοί">μούναρχοί</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#θ᾽:">θ᾽:</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἃ">ἃ</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#πόλει">πόλει</a> <a target="_blank"
-                          href="http://logeion.uchicago.edu/index.html#μήποτε">μήποτε</a> <a target="_blank" href="http://logeion.uchicago.edu/index.html#τῇδε">τῇδε</a>                        <a target="_blank" href="http://logeion.uchicago.edu/index.html#ἅδοι">ἅδοι</a>.</p>
-                      <br>
-
-
-
-
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
+    </div>
+    </div>
+</div>
+</div>
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading8">
               <h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse8" aria-expanded="false"
